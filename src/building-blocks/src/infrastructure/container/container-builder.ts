@@ -2,7 +2,16 @@ import { Controller } from '@api/controller';
 import { EventSubscriber } from '@app/event-subscriber';
 import { InMemoryEventDispatcher } from '@app/in-memory-event-dispatcher';
 import { UnitOfWorkRepository } from '@krater/database';
-import { asClass, asFunction, AwilixContainer, createContainer, Lifetime, Resolver } from 'awilix';
+import {
+  asClass,
+  asFunction,
+  asValue,
+  AwilixContainer,
+  createContainer,
+  Lifetime,
+  Resolver,
+} from 'awilix';
+import { logger } from '..';
 import { CommandHandler, InMemoryCommandBus, InMemoryQueryBus, QueryHandler } from '../..';
 import { registerAsArray } from './register-as-array';
 
@@ -14,6 +23,10 @@ export class ContainerBuilder {
 
   constructor() {
     this.container = createContainer();
+
+    this.container.register({
+      logger: asValue(logger),
+    });
   }
 
   public setCommandHandlers(commandHandlers: Resolver<CommandHandler<any, any>>[]) {
