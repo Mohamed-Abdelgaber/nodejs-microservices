@@ -4,6 +4,7 @@ specifiers:
   '@rush-temp/building-blocks': file:./projects/building-blocks.tgz
   '@rush-temp/customers': file:./projects/customers.tgz
   '@rush-temp/database': file:./projects/database.tgz
+  '@rush-temp/fraud': file:./projects/fraud.tgz
   '@types/express': ~4.17.13
   '@types/jest': ~27.0.3
   '@types/jsonwebtoken': ~8.5.6
@@ -31,16 +32,16 @@ specifiers:
   prettier: ~2.5.1
   pretty-quick: ~3.1.2
   ts-jest: ~27.1.2
-  ts-node: ~10.4.0
   tsc-alias: ~1.4.2
   typescript: ~4.5.3
   uuid: ~8.3.2
   winston: ~3.3.3
 
 dependencies:
-  '@rush-temp/building-blocks': file:projects/building-blocks.tgz_ts-node@10.4.0
+  '@rush-temp/building-blocks': file:projects/building-blocks.tgz
   '@rush-temp/customers': file:projects/customers.tgz
   '@rush-temp/database': file:projects/database.tgz
+  '@rush-temp/fraud': file:projects/fraud.tgz
   '@types/express': 4.17.13
   '@types/jest': 27.0.3
   '@types/jsonwebtoken': 8.5.8
@@ -59,7 +60,7 @@ dependencies:
   eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
   express: 4.17.3
   husky: 7.0.4
-  jest: 27.4.7_ts-node@10.4.0
+  jest: 27.4.7
   jsonwebtoken: 8.5.1
   knex: 0.95.15_pg@8.7.3
   node-schedule: 2.1.0
@@ -68,7 +69,6 @@ dependencies:
   prettier: 2.5.1
   pretty-quick: 3.1.3_prettier@2.5.1
   ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
-  ts-node: 10.4.0_f94da96e4d78a751cdd66b59796b8fdd
   tsc-alias: 1.4.2
   typescript: 4.5.5
   uuid: 8.3.2
@@ -519,6 +519,51 @@ packages:
       jest-message-util: 27.5.1
       jest-util: 27.5.1
       slash: 3.0.0
+    dev: false
+
+  /@jest/core/27.5.1:
+    resolution: {integrity: sha512-AK6/UTrvQD0Cd24NSqmIA6rKsu0tKIxfiCducZvqxYdmMisOYAsdItspT+fQDQYARPf8XgjAFZi0ogW2agH5nQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/console': 27.5.1
+      '@jest/reporters': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 16.11.26
+      ansi-escapes: 4.3.2
+      chalk: 4.1.2
+      emittery: 0.8.1
+      exit: 0.1.2
+      graceful-fs: 4.2.10
+      jest-changed-files: 27.5.1
+      jest-config: 27.5.1
+      jest-haste-map: 27.5.1
+      jest-message-util: 27.5.1
+      jest-regex-util: 27.5.1
+      jest-resolve: 27.5.1
+      jest-resolve-dependencies: 27.5.1
+      jest-runner: 27.5.1
+      jest-runtime: 27.5.1
+      jest-snapshot: 27.5.1
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      jest-watcher: 27.5.1
+      micromatch: 4.0.5
+      rimraf: 3.0.2
+      slash: 3.0.0
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
     dev: false
 
   /@jest/core/27.5.1_ts-node@10.4.0:
@@ -3302,6 +3347,36 @@ packages:
       - supports-color
     dev: false
 
+  /jest-cli/27.5.1:
+    resolution: {integrity: sha512-Hc6HOOwYq4/74/c62dEE3r5elx8wjYqxY0r0G/nFrLDPMFRu6RA/u8qINOIkvhxG7mMQ5EJsOGfRpI8L6eFUVw==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/types': 27.5.1
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.10
+      import-local: 3.1.0
+      jest-config: 27.5.1
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      prompts: 2.4.2
+      yargs: 16.2.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
+    dev: false
+
   /jest-cli/27.5.1_ts-node@10.4.0:
     resolution: {integrity: sha512-Hc6HOOwYq4/74/c62dEE3r5elx8wjYqxY0r0G/nFrLDPMFRu6RA/u8qINOIkvhxG7mMQ5EJsOGfRpI8L6eFUVw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -3359,6 +3434,46 @@ packages:
       - canvas
       - supports-color
       - ts-node
+      - utf-8-validate
+    dev: false
+
+  /jest-config/27.5.1:
+    resolution: {integrity: sha512-5sAsjm6tGdsVbW9ahcChPAFCk4IlkQUknH5AvKjuLTSlcO/wCZKyFdn7Rg0EkC+OGgWODEy2hDpWB1PgzH0JNA==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    peerDependencies:
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      ts-node:
+        optional: true
+    dependencies:
+      '@babel/core': 7.17.8
+      '@jest/test-sequencer': 27.5.1
+      '@jest/types': 27.5.1
+      babel-jest: 27.5.1_@babel+core@7.17.8
+      chalk: 4.1.2
+      ci-info: 3.3.0
+      deepmerge: 4.2.2
+      glob: 7.2.0
+      graceful-fs: 4.2.10
+      jest-circus: 27.5.1
+      jest-environment-jsdom: 27.5.1
+      jest-environment-node: 27.5.1
+      jest-get-type: 27.5.1
+      jest-jasmine2: 27.5.1
+      jest-regex-util: 27.5.1
+      jest-resolve: 27.5.1
+      jest-runner: 27.5.1
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      micromatch: 4.0.5
+      parse-json: 5.2.0
+      pretty-format: 27.5.1
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
       - utf-8-validate
     dev: false
 
@@ -3781,6 +3896,27 @@ packages:
       '@types/node': 16.11.26
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    dev: false
+
+  /jest/27.4.7:
+    resolution: {integrity: sha512-8heYvsx7nV/m8m24Vk26Y87g73Ba6ueUd0MWed/NXMhSZIm62U/llVbS0PJe1SHunbyXjJ/BqG1z9bFjGUIvTg==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 27.5.1
+      import-local: 3.1.0
+      jest-cli: 27.5.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
     dev: false
 
   /jest/27.4.7_ts-node@10.4.0:
@@ -5474,7 +5610,7 @@ packages:
       '@types/jest': 27.0.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 27.4.7_ts-node@10.7.0
+      jest: 27.4.7
       jest-util: 27.5.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -5943,9 +6079,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  file:projects/building-blocks.tgz_ts-node@10.4.0:
+  file:projects/building-blocks.tgz:
     resolution: {integrity: sha512-zRfnn0r/8A+M9KNVEH1ByGXphUOwj1RKaZWACZcVgXOAKQgsK/+cH4aB6yiRiKIfbRM9deforqH15ua3q13sFw==, tarball: file:projects/building-blocks.tgz}
-    id: file:projects/building-blocks.tgz
     name: '@rush-temp/building-blocks'
     version: 0.0.0
     dependencies:
@@ -5966,7 +6101,7 @@ packages:
       eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
       eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
       husky: 7.0.4
-      jest: 27.4.7_ts-node@10.4.0
+      jest: 27.4.7
       jsonwebtoken: 8.5.1
       node-schedule: 2.1.0
       prettier: 2.5.1
@@ -6078,5 +6213,50 @@ packages:
       - sqlite3
       - supports-color
       - tedious
+      - utf-8-validate
+    dev: false
+
+  file:projects/fraud.tgz:
+    resolution: {integrity: sha512-DzFVlkRDjfdKbHgqrAwtSKCnpfZvRagCiOERWHvVES7KYfPwX+Wu9K4FRfVtUot5E7pI0BzXXMiXKTNrXefzOw==, tarball: file:projects/fraud.tgz}
+    name: '@rush-temp/fraud'
+    version: 0.0.0
+    dependencies:
+      '@types/express': 4.17.13
+      '@types/jest': 27.0.3
+      '@types/node': 16.11.26
+      '@typescript-eslint/eslint-plugin': 5.6.0_208b89671cba43a6bd6c40399b91183c
+      '@typescript-eslint/parser': 5.6.0_eslint@7.32.0+typescript@4.5.5
+      awilix: 6.0.0
+      celebrate: 15.0.1
+      dotenv: 16.0.0
+      eslint: 7.32.0
+      eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8
+      eslint-config-prettier: 8.3.0_eslint@7.32.0
+      eslint-plugin-import: 2.24.0_eslint@7.32.0
+      eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
+      eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
+      express: 4.17.3
+      husky: 7.0.4
+      jest: 27.4.7_ts-node@10.7.0
+      nodemon: 2.0.15
+      prettier: 2.5.1
+      pretty-quick: 3.1.3_prettier@2.5.1
+      ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
+      ts-node: 10.7.0_f94da96e4d78a751cdd66b59796b8fdd
+      tsc-alias: 1.4.2
+      typescript: 4.5.5
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@swc/core'
+      - '@swc/wasm'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - eslint-plugin-jsx-a11y
+      - eslint-plugin-react
+      - eslint-plugin-react-hooks
+      - node-notifier
+      - supports-color
       - utf-8-validate
     dev: false

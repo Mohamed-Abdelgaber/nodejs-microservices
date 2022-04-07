@@ -447,6 +447,10 @@
     {
       "packageName": "@krater/customers",
       "projectFolder": "src/services/customers"
+    },
+    {
+      "packageName": "@krater/fraud",
+      "projectFolder": "src/services/fraud"
     }
   ]
 }
