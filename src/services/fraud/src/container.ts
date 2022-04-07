@@ -1,5 +1,6 @@
 import { FraudController } from '@api/fraud/fraud.controller';
 import { Server } from '@api/server';
+import { FraudCheckServiceImpl } from '@app/services/fraud-check-service/fraud-check.service';
 import { ContainerBuilder } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
@@ -13,6 +14,7 @@ export const container = () => {
     .setControllers([asClass(FraudController).singleton()])
     .setCustom({
       server: asClass(Server).singleton(),
+      fraudCheckService: asClass(FraudCheckServiceImpl).singleton(),
     })
     .build();
 
