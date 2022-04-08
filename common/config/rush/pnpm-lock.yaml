@@ -16,6 +16,7 @@ specifiers:
   '@typescript-eslint/parser': ~5.6.0
   awilix: ~6.0.0
   celebrate: ~15.0.0
+  consul: ~0.40.0
   eslint: 7.32.0
   eslint-config-airbnb-typescript: 12.3.1
   eslint-config-prettier: ~8.3.0
@@ -27,7 +28,7 @@ specifiers:
   jest: ~27.4.5
   jsonwebtoken: ~8.5.1
   knex: ~0.95.15
-  node-fetch: ~3.2.3
+  node-fetch: '2'
   node-schedule: ~2.1.0
   nodemon: ~2.0.15
   pg: ~8.7.1
@@ -55,6 +56,7 @@ dependencies:
   '@typescript-eslint/parser': 5.6.0_eslint@7.32.0+typescript@4.5.5
   awilix: 6.0.0
   celebrate: 15.0.1
+  consul: 0.40.0
   eslint: 7.32.0
   eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8
   eslint-config-prettier: 8.3.0_eslint@7.32.0
@@ -66,7 +68,7 @@ dependencies:
   jest: 27.4.7
   jsonwebtoken: 8.5.1
   knex: 0.95.15_pg@8.7.3
-  node-fetch: 3.2.3
+  node-fetch: 2.6.7
   node-schedule: 2.1.0
   nodemon: 2.0.15
   pg: 8.7.3
@@ -928,6 +930,12 @@ packages:
 
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
+    dependencies:
+      '@types/node': 16.11.26
+    dev: false
+
+  /@types/consul/0.40.0:
+    resolution: {integrity: sha512-0TPN4MxIKiuv9UcXWNgWQurNNG/J0af+A41eD4T5bFWSRoZJ8xaDocrX47CzGv5620uaPabFDjiAB/+VQu/0SQ==}
     dependencies:
       '@types/node': 16.11.26
     dev: false
@@ -1833,6 +1841,12 @@ packages:
     resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
     dev: false
 
+  /consul/0.40.0:
+    resolution: {integrity: sha512-GJdxzLAXJZZDddGhgVBeac2KeBGPABWeAlxGVjct5fAwSa2P0Zqy/e2MDPa6O1OvR5h2ko10zCyRrMjctbfytg==}
+    dependencies:
+      papi: 0.29.1
+    dev: false
+
   /content-disposition/0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
@@ -1899,11 +1913,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       cssom: 0.3.8
-    dev: false
-
-  /data-uri-to-buffer/4.0.0:
-    resolution: {integrity: sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==}
-    engines: {node: '>= 12'}
     dev: false
 
   /data-urls/2.0.0:
@@ -2629,14 +2638,6 @@ packages:
     resolution: {integrity: sha512-MMMQ0ludy/nBs1/o0zVOiKTpG7qMbonKUzjJgQFEuvq6INZ1OraKPRAWkBq5vlKLOUMpmNYG1JoN3oDPUQ9m3Q==}
     dev: false
 
-  /fetch-blob/3.1.5:
-    resolution: {integrity: sha512-N64ZpKqoLejlrwkIAnb9iLSA3Vx/kjgzpcDhygcqJ2KKjky8nCgUQ+dzXtbrLaWZGZNmNfQTsiQ0weZ1svglHg==}
-    engines: {node: ^12.20 || >= 14.13}
-    dependencies:
-      node-domexception: 1.0.0
-      web-streams-polyfill: 3.2.0
-    dev: false
-
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -2719,13 +2720,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: false
-
-  /formdata-polyfill/4.0.10:
-    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
-    engines: {node: '>=12.20.0'}
-    dependencies:
-      fetch-blob: 3.1.5
     dev: false
 
   /forwarded/0.2.0:
@@ -4478,11 +4472,6 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /node-domexception/1.0.0:
-    resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
-    engines: {node: '>=10.5.0'}
-    dev: false
-
   /node-fetch/2.6.7:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
     engines: {node: 4.x || >=6.0.0}
@@ -4493,15 +4482,6 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
-    dev: false
-
-  /node-fetch/3.2.3:
-    resolution: {integrity: sha512-AXP18u4pidSZ1xYXRDPY/8jdv3RAozIt/WLNR/MBGZAz+xjtlr90RvCnsvHQRiXyWliZF/CpytExp32UU67/SA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      data-uri-to-buffer: 4.0.0
-      fetch-blob: 3.1.5
-      formdata-polyfill: 4.0.10
     dev: false
 
   /node-int64/0.4.0:
@@ -4718,6 +4698,10 @@ packages:
 
   /packet-reader/1.0.0:
     resolution: {integrity: sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==}
+    dev: false
+
+  /papi/0.29.1:
+    resolution: {integrity: sha512-Y9ipSMfWuuVFO3zY9PlxOmEg+bQ7CeJ28sa9/a0veYNynLf9fwjR3+3fld5otEy7okUaEOUuCHVH62MyTmACXQ==}
     dev: false
 
   /parent-module/1.0.1:
@@ -5965,11 +5949,6 @@ packages:
       makeerror: 1.0.12
     dev: false
 
-  /web-streams-polyfill/3.2.0:
-    resolution: {integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==}
-    engines: {node: '>= 8'}
-    dev: false
-
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}
     dev: false
@@ -6200,10 +6179,11 @@ packages:
     dev: false
 
   file:projects/customers.tgz:
-    resolution: {integrity: sha512-YVUh3I65RZ/Tp7AHifBI/4WB50RmTgPD4KCJCK9CyI+SHM5R9ErirXA9hDuws2qdoctXk4IZboShgHhbR6KVjA==, tarball: file:projects/customers.tgz}
+    resolution: {integrity: sha512-gDhZK4BmbJmQmhMT0aMQA8xmVcig4hXvPm6vmgFAncHK+NPkV83C/mJzVvcKRZCTrST0Oeqtg+sZ9nXyPZyNew==, tarball: file:projects/customers.tgz}
     name: '@rush-temp/customers'
     version: 0.0.0
     dependencies:
+      '@types/consul': 0.40.0
       '@types/express': 4.17.13
       '@types/jest': 27.0.3
       '@types/node': 16.11.26
@@ -6212,6 +6192,7 @@ packages:
       '@typescript-eslint/parser': 5.6.0_eslint@7.32.0+typescript@4.5.5
       awilix: 6.0.0
       celebrate: 15.0.1
+      consul: 0.40.0
       dotenv: 16.0.0
       eslint: 7.32.0
       eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8
