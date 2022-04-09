@@ -5,6 +5,8 @@ services:
     image: consul
     container_name: consul
     restart: unless-stopped
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
     ports:
       - 8500:8500
   
@@ -51,9 +53,13 @@ services:
       - 8200:8200
 
   fabio:
-    image: fabiolb/fabio
+    image: fabiolb/fabio:1.5.13-go1.13.4
     container_name: fabio
     restart: unless-stopped
     environment:
     - FABIO_REGISTRY_CONSUL_ADDR=localhost:8500
+    - FABIO_PROXY_STRATEGY=rr
     network_mode: host
+    ports:
+      - 9998:9998
+      - 9999:9999
