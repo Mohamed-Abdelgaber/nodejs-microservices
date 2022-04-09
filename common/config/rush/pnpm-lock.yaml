@@ -5,6 +5,7 @@ specifiers:
   '@rush-temp/customers': file:./projects/customers.tgz
   '@rush-temp/database': file:./projects/database.tgz
   '@rush-temp/fraud': file:./projects/fraud.tgz
+  '@types/consul': ~0.40.0
   '@types/express': ~4.17.13
   '@types/jest': ~27.0.3
   '@types/jsonwebtoken': ~8.5.6
@@ -45,6 +46,7 @@ dependencies:
   '@rush-temp/customers': file:projects/customers.tgz
   '@rush-temp/database': file:projects/database.tgz
   '@rush-temp/fraud': file:projects/fraud.tgz
+  '@types/consul': 0.40.0
   '@types/express': 4.17.13
   '@types/jest': 27.0.3
   '@types/jsonwebtoken': 8.5.8
@@ -6179,7 +6181,7 @@ packages:
     dev: false
 
   file:projects/customers.tgz:
-    resolution: {integrity: sha512-gDhZK4BmbJmQmhMT0aMQA8xmVcig4hXvPm6vmgFAncHK+NPkV83C/mJzVvcKRZCTrST0Oeqtg+sZ9nXyPZyNew==, tarball: file:projects/customers.tgz}
+    resolution: {integrity: sha512-z4HSEdDjKHIVUAgPr147I+HJioKGyo2I/b1inVn72+XTgY5HBgYdXJPxo7Yj3mk3BTecNGXDYmf14c/11yiN9w==, tarball: file:projects/customers.tgz}
     name: '@rush-temp/customers'
     version: 0.0.0
     dependencies:
@@ -6278,10 +6280,11 @@ packages:
     dev: false
 
   file:projects/fraud.tgz:
-    resolution: {integrity: sha512-DzFVlkRDjfdKbHgqrAwtSKCnpfZvRagCiOERWHvVES7KYfPwX+Wu9K4FRfVtUot5E7pI0BzXXMiXKTNrXefzOw==, tarball: file:projects/fraud.tgz}
+    resolution: {integrity: sha512-aXDjJgjbkPAPKEt0sQ1az9pdqdasicFS8Du0G2Mqybnr3bOHeRqUGCENeZVxfM7watGmdV9D4GYyoIGO9lzqQg==, tarball: file:projects/fraud.tgz}
     name: '@rush-temp/fraud'
     version: 0.0.0
     dependencies:
+      '@types/consul': 0.40.0
       '@types/express': 4.17.13
       '@types/jest': 27.0.3
       '@types/node': 16.11.26
@@ -6289,6 +6292,7 @@ packages:
       '@typescript-eslint/parser': 5.6.0_eslint@7.32.0+typescript@4.5.5
       awilix: 6.0.0
       celebrate: 15.0.1
+      consul: 0.40.0
       dotenv: 16.0.0
       eslint: 7.32.0
       eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8

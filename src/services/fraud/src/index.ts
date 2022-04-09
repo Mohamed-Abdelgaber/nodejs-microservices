@@ -2,6 +2,7 @@ require('dotenv').config();
 // import dotenv from 'dotenv';
 import { Logger } from '@krater/building-blocks';
 import { Application } from 'express';
+import Consul from 'consul';
 import { container } from './container';
 
 // dotenv.config();
@@ -14,7 +15,7 @@ import { container } from './container';
 
   const PORT = process.env.APP_PORT ?? 4000;
 
-  app.listen(PORT, () => {
-    logger.info(`Customer service listening on http://localhost:${PORT}`);
+  app.listen(PORT, async () => {
+    logger.info(`Fraud service listening on http://localhost:${PORT}`);
   });
 })();

@@ -1,10 +1,7 @@
-/* eslint-disable no-console */
 /* eslint-disable import/first */
 require('dotenv').config();
-// import dotenv from 'dotenv';
 import { Logger } from '@krater/building-blocks';
 import { Application } from 'express';
-import Consul from 'consul';
 import { container } from './container';
 
 (async () => {
@@ -17,19 +14,5 @@ import { container } from './container';
 
   app.listen(PORT, async () => {
     logger.info(`Customer service listening on http://localhost:${PORT}`);
-
-    const consul = new Consul({
-      host: '127.0.0.1',
-      port: '8500',
-      promisify: true,
-      secure: false,
-    });
-
-    // @ts-ignore
-    consul.agent.service.register({
-      name: 'customers-ms',
-      Address: '192.168.0.255',
-      port: PORT,
-    });
   });
 })();
