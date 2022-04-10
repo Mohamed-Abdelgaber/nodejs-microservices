@@ -451,6 +451,10 @@
     {
       "packageName": "@krater/fraud",
       "projectFolder": "src/services/fraud"
+    },
+    {
+      "packageName": "@krater/notifications",
+      "projectFolder": "src/services/notifications"
     }
   ]
 }
