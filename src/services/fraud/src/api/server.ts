@@ -14,6 +14,8 @@ export class Server {
 
     this.app.use(express.json());
 
+    this.app.get('/health', (_, res) => res.sendStatus(200));
+
     this.dependencies.controllers.forEach((controller) =>
       this.app.use(controller.route, controller.getRouter()),
     );

@@ -2,7 +2,6 @@ require('dotenv').config();
 // import dotenv from 'dotenv';
 import { Logger } from '@krater/building-blocks';
 import { Application } from 'express';
-import Consul from 'consul';
 import { container } from './container';
 
 // dotenv.config();
