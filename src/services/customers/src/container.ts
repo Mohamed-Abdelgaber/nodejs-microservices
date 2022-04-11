@@ -1,7 +1,7 @@
 import { CustomersController } from '@api/customers/customers.controller';
 import { Server } from '@api/server';
 import { CreateCustomerCommandHandler } from '@app/commands/create-customer/create-customer.command-handler';
-import { ContainerBuilder } from '@krater/building-blocks';
+import { ContainerBuilder, ConsulServiceDiscovery } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
 export const container = () => {
@@ -14,6 +14,9 @@ export const container = () => {
     .setControllers([asClass(CustomersController).singleton()])
     .setCustom({
       server: asClass(Server).singleton(),
+      serviceDiscovery: asClass(ConsulServiceDiscovery)
+        .inject(() => ({ consulUrl: 'http://localhost:8500' }))
+        .singleton(),
     })
     .build();
 

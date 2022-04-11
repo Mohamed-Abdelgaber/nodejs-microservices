@@ -30,7 +30,6 @@ specifiers:
   jest: ~27.4.5
   jsonwebtoken: ~8.5.1
   knex: ~0.95.15
-  node-fetch: '2'
   node-schedule: ~2.1.0
   nodemon: ~2.0.15
   pg: ~8.7.1
@@ -72,7 +71,6 @@ dependencies:
   jest: 27.4.7
   jsonwebtoken: 8.5.1
   knex: 0.95.15_pg@8.7.3
-  node-fetch: 2.6.7
   node-schedule: 2.1.0
   nodemon: 2.0.15
   pg: 8.7.3
@@ -6140,7 +6138,7 @@ packages:
     dev: false
 
   file:projects/building-blocks.tgz:
-    resolution: {integrity: sha512-zRfnn0r/8A+M9KNVEH1ByGXphUOwj1RKaZWACZcVgXOAKQgsK/+cH4aB6yiRiKIfbRM9deforqH15ua3q13sFw==, tarball: file:projects/building-blocks.tgz}
+    resolution: {integrity: sha512-ozsS11ASKS83jPjHPdSfHHlyx/GT/KKvzqdMGqHoaSXbAFi0SDpTFqJcsUzkxoScvPa4raJMXiq+lZtz9dR+XQ==, tarball: file:projects/building-blocks.tgz}
     name: '@rush-temp/building-blocks'
     version: 0.0.0
     dependencies:
@@ -6163,6 +6161,7 @@ packages:
       husky: 7.0.4
       jest: 27.4.7
       jsonwebtoken: 8.5.1
+      node-fetch: 2.6.7
       node-schedule: 2.1.0
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
@@ -6173,6 +6172,7 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - canvas
+      - encoding
       - eslint-plugin-jsx-a11y
       - eslint-plugin-react
       - eslint-plugin-react-hooks
