@@ -1,7 +1,7 @@
 import { FraudController } from '@api/fraud/fraud.controller';
 import { Server } from '@api/server';
 import { FraudCheckServiceImpl } from '@app/services/fraud-check-service/fraud-check.service';
-import { ContainerBuilder } from '@krater/building-blocks';
+import { ConsulServiceDiscovery, ContainerBuilder } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
 export const container = () => {
@@ -15,6 +15,11 @@ export const container = () => {
     .setCustom({
       server: asClass(Server).singleton(),
       fraudCheckService: asClass(FraudCheckServiceImpl).singleton(),
+      serviceDiscovery: asClass(ConsulServiceDiscovery)
+        .inject(() => ({
+          consulUrl: 'http://localhost:8500',
+        }))
+        .singleton(),
     })
     .build();
 
