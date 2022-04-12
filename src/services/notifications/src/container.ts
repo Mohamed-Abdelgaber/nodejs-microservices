@@ -1,5 +1,5 @@
 import { Server } from '@api/server';
-import { ContainerBuilder } from '@krater/building-blocks';
+import { ConsulServiceDiscovery, ContainerBuilder } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
 export const container = () => {
@@ -12,6 +12,9 @@ export const container = () => {
     .setControllers([])
     .setCustom({
       server: asClass(Server).singleton(),
+      serviceDiscovery: asClass(ConsulServiceDiscovery)
+        .inject(() => ({ consulUrl: 'http://localhost:8500' }))
+        .singleton(),
     })
     .build();
 
