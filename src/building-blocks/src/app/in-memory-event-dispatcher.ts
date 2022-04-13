@@ -15,7 +15,7 @@ export class InMemoryEventDispatcher implements EventDispatcher {
 
   public async dispatchEvent(event: DomainEvent<{}>, unitOfWork: UnitOfWork): Promise<void> {
     const subscriberHandlerPromises = this.dependencies.subscribers
-      .filter((subscriber) => subscriber.type === event.name)
+      .filter((subscriber) => subscriber.type === event.constructor.name)
       .map((subscriber) =>
         subscriber
           .handle(event, unitOfWork)
@@ -31,7 +31,7 @@ export class InMemoryEventDispatcher implements EventDispatcher {
       return;
     }
 
-    this.dependencies.logger.info(`Dispatching handlers for event "${event.name}".`);
+    this.dependencies.logger.info(`Dispatching handlers for event "${event.constructor.name}".`);
 
     await Promise.all(subscriberHandlerPromises);
   }
@@ -44,12 +44,14 @@ export class InMemoryEventDispatcher implements EventDispatcher {
 
     aggregate.clearDomainEvents();
 
-    const eventNames = events.map((event) => event.name);
+    const eventNames = events.map((event) => event.constructor.name);
 
     const subscriberHandlerPromises = this.dependencies.subscribers
       .filter((subscriber) => eventNames.includes(subscriber.type))
       .map((subscriber) => {
-        const eventForSubscriber = events.find((event) => event.name === subscriber.type);
+        const eventForSubscriber = events.find(
+          (event) => event.constructor.name === subscriber.type,
+        );
 
         return subscriber.handle(eventForSubscriber, unitOfWork).catch((error) => {
           this.dependencies.logger.error(

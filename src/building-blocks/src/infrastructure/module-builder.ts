@@ -9,7 +9,7 @@ import { DomainEvent } from '..';
 export interface AppModule {
   name: string;
   registerControllers(app: Application): void;
-  dispatchEvent(event: DomainEvent): Promise<void>;
+  dispatchEvent(event: DomainEvent<unknown>): Promise<void>;
 }
 
 export interface ModuleDependencies {
@@ -43,7 +43,7 @@ export class ModuleBuilder {
       name: this.name,
       registerControllers: (app: Application) =>
         controllers.map((controller) => app.use(controller.route, controller.getRouter())),
-      dispatchEvent: async (event: DomainEvent) => {
+      dispatchEvent: async (event: DomainEvent<unknown>) => {
         const eventDispatcher = this.container.resolve<EventDispatcher>('eventDispatcher');
         const unitOfWork = this.container.resolve<UnitOfWork>('unitOfWork');
 
