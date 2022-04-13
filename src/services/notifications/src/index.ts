@@ -1,8 +1,9 @@
 /* eslint-disable import/first */
 require('dotenv').config();
-import { Logger, ServiceDiscovery } from '@krater/building-blocks';
+import { Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
 import { Application } from 'express';
 import { container } from './container';
+import { CustomerCreatedEvent } from './integration-events/customer-created.event';
 
 (async () => {
   const appContainer = container();
@@ -11,6 +12,20 @@ import { container } from './container';
   const logger = appContainer.resolve<Logger>('logger');
 
   const serviceDiscovery = appContainer.resolve<ServiceDiscovery>('serviceDiscovery');
+  const messageBus = appContainer.resolve<MessageBus>('messageBus');
+
+  await messageBus.init();
+
+  await messageBus.subscribeToEvent(
+    'CustomerCreatedEvent',
+    'customers',
+    async (event: CustomerCreatedEvent) => {
+      // TODO: Implement valid subscriber
+      console.log({
+        event,
+      });
+    },
+  );
 
   const PORT = process.env.APP_PORT ?? 4000;
 

@@ -1,5 +1,9 @@
 import { Server } from '@api/server';
-import { ConsulServiceDiscovery, ContainerBuilder } from '@krater/building-blocks';
+import {
+  ConsulServiceDiscovery,
+  ContainerBuilder,
+  RabbitMqMessageBus,
+} from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
 export const container = () => {
@@ -14,6 +18,12 @@ export const container = () => {
       server: asClass(Server).singleton(),
       serviceDiscovery: asClass(ConsulServiceDiscovery)
         .inject(() => ({ consulUrl: 'http://localhost:8500' }))
+        .singleton(),
+      messageBus: asClass(RabbitMqMessageBus)
+        .inject(() => ({
+          rabbitUrl: 'amqp://localhost',
+          serviceName: 'notifications',
+        }))
         .singleton(),
     })
     .build();

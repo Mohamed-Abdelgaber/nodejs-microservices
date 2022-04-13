@@ -1,7 +1,11 @@
 import { CustomersController } from '@api/customers/customers.controller';
 import { Server } from '@api/server';
 import { CreateCustomerCommandHandler } from '@app/commands/create-customer/create-customer.command-handler';
-import { ContainerBuilder, ConsulServiceDiscovery } from '@krater/building-blocks';
+import {
+  ContainerBuilder,
+  ConsulServiceDiscovery,
+  RabbitMqMessageBus,
+} from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
 
 export const container = () => {
@@ -16,6 +20,12 @@ export const container = () => {
       server: asClass(Server).singleton(),
       serviceDiscovery: asClass(ConsulServiceDiscovery)
         .inject(() => ({ consulUrl: 'http://localhost:8500' }))
+        .singleton(),
+      messageBus: asClass(RabbitMqMessageBus)
+        .inject(() => ({
+          rabbitUrl: 'amqp://localhost',
+          serviceName: 'customers',
+        }))
         .singleton(),
     })
     .build();

@@ -7,5 +7,7 @@ export interface CreateCustomerCommandPayload {
 }
 
 export class CreateCustomerCommand implements Command<CreateCustomerCommandPayload> {
+  public readonly service = 'customers';
+
   constructor(public readonly payload: CreateCustomerCommandPayload) {}
 }
