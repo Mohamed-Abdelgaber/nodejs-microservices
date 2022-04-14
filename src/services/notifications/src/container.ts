@@ -1,4 +1,5 @@
 import { Server } from '@api/server';
+import { CustomerCreatedSubscriber } from '@app/subscribers/customer-created/customer-created.subscriber';
 import {
   ConsulServiceDiscovery,
   ContainerBuilder,
@@ -12,7 +13,7 @@ export const container = () => {
     .setCommandHandlers([])
     .setQueryHandlers([])
     .setRepositories([])
-    .setSubscribers([])
+    .setSubscribers([asClass(CustomerCreatedSubscriber).singleton()])
     .setControllers([])
     .setCustom({
       server: asClass(Server).singleton(),

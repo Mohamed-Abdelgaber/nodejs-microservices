@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import { Controller, Logger } from '@krater/building-blocks';
+import { Controller, logger, Logger } from '@krater/building-blocks';
 
 interface Dependencies {
   logger: Logger;
@@ -14,7 +14,10 @@ export class Server {
 
     this.app.use(express.json());
 
-    this.app.get('/health', (_, res) => res.sendStatus(200));
+    this.app.get('/health', (_, res) => {
+      logger.info('Health check endpoint hit.');
+      res.sendStatus(200);
+    });
 
     this.dependencies.controllers.forEach((controller) =>
       this.app.use(controller.route, controller.getRouter()),

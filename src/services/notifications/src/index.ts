@@ -1,9 +1,9 @@
 /* eslint-disable import/first */
 require('dotenv').config();
-import { Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
+
+import { EventSubscriber, Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
 import { Application } from 'express';
 import { container } from './container';
-import { CustomerCreatedEvent } from './integration-events/customer-created.event';
 
 (async () => {
   const appContainer = container();
@@ -13,19 +13,17 @@ import { CustomerCreatedEvent } from './integration-events/customer-created.even
 
   const serviceDiscovery = appContainer.resolve<ServiceDiscovery>('serviceDiscovery');
   const messageBus = appContainer.resolve<MessageBus>('messageBus');
+  const subscribers = appContainer.resolve<EventSubscriber<any>[]>('subscribers');
 
   await messageBus.init();
 
-  await messageBus.subscribeToEvent(
-    'CustomerCreatedEvent',
-    'customers',
-    async (event: CustomerCreatedEvent) => {
-      // TODO: Implement valid subscriber
-      console.log({
-        event,
-      });
-    },
-  );
+  const subscriberPromises = subscribers.map((subscriber) => {
+    const [service, event] = subscriber.type.split('.');
+
+    return messageBus.subscribeToEvent(event, service, (event) => subscriber.handle(event));
+  });
+
+  await Promise.all(subscriberPromises);
 
   const PORT = process.env.APP_PORT ?? 4000;
 
@@ -38,6 +36,8 @@ import { CustomerCreatedEvent } from './integration-events/customer-created.even
       name: 'notifications',
       health: {
         endpoint: '/health',
+        intervalSeconds: 5,
+        timeoutSeconds: 5,
       },
     });
   });

@@ -1,6 +1,5 @@
 import { AggregateRoot } from '@core/aggregate-root';
 import { DomainEvent } from '@core/domain-event';
-import { UnitOfWork } from '@krater/database';
 import { Logger } from '..';
 import { EventDispatcher } from './event-dispatcher';
 import { EventSubscriber } from './event-subscriber';
@@ -13,12 +12,12 @@ interface Dependencies {
 export class InMemoryEventDispatcher implements EventDispatcher {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async dispatchEvent(event: DomainEvent<{}>, unitOfWork: UnitOfWork): Promise<void> {
+  public async dispatchEvent(event: DomainEvent<{}>): Promise<void> {
     const subscriberHandlerPromises = this.dependencies.subscribers
       .filter((subscriber) => subscriber.type === event.constructor.name)
       .map((subscriber) =>
         subscriber
-          .handle(event, unitOfWork)
+          .handle(event)
           .catch((error) =>
             this.dependencies.logger.error(
               `Subscriber failed to handle event "${subscriber.type}".`,
@@ -36,10 +35,7 @@ export class InMemoryEventDispatcher implements EventDispatcher {
     await Promise.all(subscriberHandlerPromises);
   }
 
-  public async dispatchEventsForAggregate(
-    aggregate: AggregateRoot<{}>,
-    unitOfWork: UnitOfWork,
-  ): Promise<void> {
+  public async dispatchEventsForAggregate(aggregate: AggregateRoot<{}>): Promise<void> {
     const events = aggregate.getDomainEvents();
 
     aggregate.clearDomainEvents();
@@ -53,7 +49,7 @@ export class InMemoryEventDispatcher implements EventDispatcher {
           (event) => event.constructor.name === subscriber.type,
         );
 
-        return subscriber.handle(eventForSubscriber, unitOfWork).catch((error) => {
+        return subscriber.handle(eventForSubscriber).catch((error) => {
           this.dependencies.logger.error(
             `Subscriber failed to handle event "${subscriber.type}".`,
             error,

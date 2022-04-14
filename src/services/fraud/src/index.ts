@@ -22,6 +22,8 @@ import { container } from './container';
       name: 'fraud',
       health: {
         endpoint: '/health',
+        intervalSeconds: 5,
+        timeoutSeconds: 5,
       },
     });
   });

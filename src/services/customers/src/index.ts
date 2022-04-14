@@ -28,6 +28,8 @@ import { container } from './container';
       name: 'customers',
       health: {
         endpoint: '/health',
+        intervalSeconds: 5,
+        timeoutSeconds: 5,
       },
     });
   });

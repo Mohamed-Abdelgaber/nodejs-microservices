@@ -27,12 +27,7 @@ export class ConsulServiceDiscovery implements ServiceDiscovery {
     const existingService = catalogData.find((service) => service.ServicePort === port);
 
     if (existingService) {
-      await fetch(
-        `${this.dependencies.consulUrl}/v1/agent/service/deregister/${existingService.ServiceID}`,
-        {
-          method: 'PUT',
-        },
-      );
+      this.deregisterService(existingService.ServiceID);
     }
 
     const res = await fetch(`${this.dependencies.consulUrl}/v1/agent/service/register`, {
@@ -59,5 +54,9 @@ export class ConsulServiceDiscovery implements ServiceDiscovery {
     }
   }
 
-  public async deregisterService(serviceId: string): Promise<void> {}
+  public async deregisterService(serviceId: string): Promise<void> {
+    await fetch(`${this.dependencies.consulUrl}/v1/agent/service/deregister/${serviceId}`, {
+      method: 'PUT',
+    });
+  }
 }
