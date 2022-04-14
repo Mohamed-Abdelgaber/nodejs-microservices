@@ -11,7 +11,6 @@ export class CustomerCreatedSubscriber implements EventSubscriber<CustomerCreate
   constructor(private readonly dependencies: Dependencies) {}
 
   public async handle(event: CustomerCreatedEvent) {
-    this.dependencies.logger.info('Accepting event in subscriber');
-    this.dependencies.logger.info(JSON.stringify(event, null, 2));
+    this.dependencies.logger.info(`Sending welcome email to "${event.payload.email}".`);
   }
 }

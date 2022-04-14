@@ -22,7 +22,8 @@
     "celebrate": "~15.0.0",
     "dotenv": "~16.0.0",
     "node-fetch": "2",
-    "consul": "~0.40.0"
+    "consul": "~0.40.0",
+    "node-vault": "~0.9.22"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",
@@ -44,7 +45,8 @@
     "nodemon": "~2.0.15",
     "ts-node": "~10.7.0",
     "@types/node-fetch": "~2.6.1",
-    "@types/consul": "~0.40.0"
+    "@types/consul": "~0.40.0",
+    "@types/node-vault": "~0.9.13"
   },
   "keywords": [],
   "author": "",
