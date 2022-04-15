@@ -1,10 +1,11 @@
 /* eslint-disable import/first */
 require('dotenv').config();
 
-import { Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
+import { Logger, MessageBus, ServiceDiscovery, TracerBuilder } from '@krater/building-blocks';
 import { Application } from 'express';
 import { container } from './container';
 import Vault from 'node-vault';
+import * as opentracing from 'opentracing';
 
 (async () => {
   const appContainer = container();
@@ -36,6 +37,31 @@ import Vault from 'node-vault';
 
   app.listen(PORT, async () => {
     logger.info(`${data.data.name} listening on http://localhost:${PORT}`);
+
+    const tracerBuilder = new TracerBuilder('customers').build();
+
+    opentracing.initGlobalTracer(tracerBuilder);
+
+    const tracer = opentracing.globalTracer();
+
+    const span = tracer.startSpan('do_something');
+
+    console.log({ context: span.context() });
+
+    span.setTag('alpha', '200');
+    span.setTag('beta', '50');
+    span.log({ state: 'waiting' });
+
+    const otherSpan = tracer.startSpan('nice', {
+      childOf: span.context(),
+    });
+
+    span.finish();
+
+    otherSpan.log({
+      state: 'progress',
+    });
+    otherSpan.finish();
 
     await serviceDiscovery.registerService({
       address: '127.0.0.1',

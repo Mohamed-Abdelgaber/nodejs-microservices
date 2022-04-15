@@ -3,7 +3,7 @@ import { SeqTransport } from '@datalust/winston-seq';
 
 export interface Logger {
   log: LogMethod;
-  error: LeveledLogMethod;
+  error: ErrorLogMethod;
   warn: LeveledLogMethod;
   info: LeveledLogMethod;
   verbose: LeveledLogMethod;
@@ -12,7 +12,9 @@ export interface Logger {
 
 export type LogMethod = (level: string, message: string) => Logger;
 
-export type LeveledLogMethod = (message: string, error?: unknown) => Logger;
+export type LeveledLogMethod = (message: string, payload?: unknown) => Logger;
+
+export type ErrorLogMethod = (message: string, error?: unknown) => Logger;
 
 const logFormat = Winston.format.printf(
   ({ level, message }) => `${new Date().toISOString()} | [${level}]: ${message}`,

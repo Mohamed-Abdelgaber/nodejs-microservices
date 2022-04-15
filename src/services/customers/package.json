@@ -23,7 +23,9 @@
     "dotenv": "~16.0.0",
     "node-fetch": "2",
     "consul": "~0.40.0",
-    "node-vault": "~0.9.22"
+    "node-vault": "~0.9.22",
+    "opentracing": "~0.14.7",
+    "@opentelemetry/api": "~1.0.4"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",
@@ -45,8 +47,7 @@
     "nodemon": "~2.0.15",
     "ts-node": "~10.7.0",
     "@types/node-fetch": "~2.6.1",
-    "@types/consul": "~0.40.0",
-    "@types/node-vault": "~0.9.13"
+    "@types/consul": "~0.40.0"
   },
   "keywords": [],
   "author": "",

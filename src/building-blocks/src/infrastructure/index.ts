@@ -9,3 +9,5 @@ export * from './token-provider';
 export * from './service-discovery';
 
 export * from './message-bus';
+
+export * from './tracer';
