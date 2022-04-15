@@ -4,10 +4,18 @@ import {
   ConsulServiceDiscovery,
   ContainerBuilder,
   RabbitMqMessageBus,
+  TracerBuilder,
 } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
+import * as opentracing from 'opentracing';
 
 export const container = () => {
+  const tracerBuilder = new TracerBuilder('notifications').build();
+
+  opentracing.initGlobalTracer(tracerBuilder);
+
+  const tracer = opentracing.globalTracer();
+
   const appContainer = new ContainerBuilder()
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setCommandHandlers([])
@@ -26,6 +34,7 @@ export const container = () => {
           serviceName: 'notifications',
         }))
         .singleton(),
+      tracer: asValue(tracer),
     })
     .build();
 

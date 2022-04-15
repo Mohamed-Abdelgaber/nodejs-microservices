@@ -1,9 +1,11 @@
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import { Resource } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import { TracerShim } from '@opentelemetry/shim-opentracing';
+import { registerInstrumentations } from '@opentelemetry/instrumentation';
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 
 export class TracerBuilder {
   private provider: NodeTracerProvider;
@@ -15,7 +17,12 @@ export class TracerBuilder {
       }),
     });
 
-    this.provider.addSpanProcessor(new SimpleSpanProcessor(this.getExporter()));
+    this.provider.addSpanProcessor(new BatchSpanProcessor(this.getExporter()));
+
+    registerInstrumentations({
+      tracerProvider: this.provider,
+      instrumentations: [new HttpInstrumentation()],
+    });
 
     this.provider.register();
   }

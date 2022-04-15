@@ -22,7 +22,8 @@
     "celebrate": "~15.0.0",
     "dotenv": "~16.0.0",
     "node-fetch": "2",
-    "consul": "~0.40.0"
+    "consul": "~0.40.0",
+    "opentracing": "~0.14.7"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",

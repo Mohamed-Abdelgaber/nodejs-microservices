@@ -5,6 +5,9 @@ specifiers:
   '@opentelemetry/api': ~1.0.4
   '@opentelemetry/auto-instrumentations-node': ~0.28.0
   '@opentelemetry/exporter-jaeger': ~1.0.1
+  '@opentelemetry/instrumentation': ~0.27.0
+  '@opentelemetry/instrumentation-fetch': ~0.27.0
+  '@opentelemetry/instrumentation-http': ~0.27.0
   '@opentelemetry/resources': ~1.0.1
   '@opentelemetry/sdk-node': ~0.27.0
   '@opentelemetry/sdk-trace-base': ~1.0.1
@@ -61,6 +64,9 @@ dependencies:
   '@opentelemetry/api': 1.0.4
   '@opentelemetry/auto-instrumentations-node': 0.28.0_@opentelemetry+api@1.0.4
   '@opentelemetry/exporter-jaeger': 1.0.1_@opentelemetry+api@1.0.4
+  '@opentelemetry/instrumentation': 0.27.0_@opentelemetry+api@1.0.4
+  '@opentelemetry/instrumentation-fetch': 0.27.0_@opentelemetry+api@1.0.4
+  '@opentelemetry/instrumentation-http': 0.27.0_@opentelemetry+api@1.0.4
   '@opentelemetry/resources': 1.0.1_@opentelemetry+api@1.0.4
   '@opentelemetry/sdk-node': 0.27.0_@opentelemetry+api@1.0.4
   '@opentelemetry/sdk-trace-base': 1.0.1_@opentelemetry+api@1.0.4
@@ -1146,6 +1152,21 @@ packages:
       - supports-color
     dev: false
 
+  /@opentelemetry/instrumentation-fetch/0.27.0_@opentelemetry+api@1.0.4:
+    resolution: {integrity: sha512-gBbX0quqQ2UAxnvCA9e1/ubNvBjou2iDBYRAzlCEr0I4FfeQnSsSm7bzhbZpwgQVR/d4eMYf7xfHy0rnS1hMHA==}
+    engines: {node: '>=8.0.0'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.0.0
+    dependencies:
+      '@opentelemetry/api': 1.0.4
+      '@opentelemetry/core': 1.0.1_@opentelemetry+api@1.0.4
+      '@opentelemetry/instrumentation': 0.27.0_@opentelemetry+api@1.0.4
+      '@opentelemetry/sdk-trace-web': 1.0.1_@opentelemetry+api@1.0.4
+      '@opentelemetry/semantic-conventions': 1.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@opentelemetry/instrumentation-generic-pool/0.27.2_@opentelemetry+api@1.0.4:
     resolution: {integrity: sha512-pEnxl5+rN/2g2yblnGsJomoDVtTnxyW26QR1iMX5uBzdtRQNVwXQrUHNNHEZyHziTcBqFDqJ5A4MTCWVTp7hdQ==}
     engines: {node: '>=8.5.0'}
@@ -1561,6 +1582,18 @@ packages:
       '@opentelemetry/propagator-jaeger': 1.0.1_@opentelemetry+api@1.0.4
       '@opentelemetry/sdk-trace-base': 1.0.1_@opentelemetry+api@1.0.4
       semver: 7.3.5
+    dev: false
+
+  /@opentelemetry/sdk-trace-web/1.0.1_@opentelemetry+api@1.0.4:
+    resolution: {integrity: sha512-oxEWzdT9Mhb/X1fgnnt5XieOtyjldyCORPs7aBm44oUGNunI2bpooEPiCbfRSm12WJvxsno6zPaNlKzJv/04pw==}
+    engines: {node: '>=8.0.0'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.1.0'
+    dependencies:
+      '@opentelemetry/api': 1.0.4
+      '@opentelemetry/core': 1.0.1_@opentelemetry+api@1.0.4
+      '@opentelemetry/sdk-trace-base': 1.0.1_@opentelemetry+api@1.0.4
+      '@opentelemetry/semantic-conventions': 1.0.1
     dev: false
 
   /@opentelemetry/semantic-conventions/1.0.1:
@@ -7826,7 +7859,7 @@ packages:
     dev: false
 
   file:projects/building-blocks.tgz:
-    resolution: {integrity: sha512-NIlqcqPvxKEVoYFZM7lvqG2QMDFypgDqtknOulNFkj8twx7DEtEtKPh8Us4HSL/aijMSumMmyi6ukbzrnNJzIg==, tarball: file:projects/building-blocks.tgz}
+    resolution: {integrity: sha512-dgL8k3XzhqY5di3f1LZEdRf5TjqzpXJcLINEJQyzZE7eJoOPlVRtBiTzu+8RK67N3O5j6vyTVji+NiqCCLEU8g==, tarball: file:projects/building-blocks.tgz}
     name: '@rush-temp/building-blocks'
     version: 0.0.0
     dependencies:
@@ -7834,6 +7867,9 @@ packages:
       '@opentelemetry/api': 1.0.4
       '@opentelemetry/auto-instrumentations-node': 0.28.0_@opentelemetry+api@1.0.4
       '@opentelemetry/exporter-jaeger': 1.0.1_@opentelemetry+api@1.0.4
+      '@opentelemetry/instrumentation': 0.27.0_@opentelemetry+api@1.0.4
+      '@opentelemetry/instrumentation-fetch': 0.27.0_@opentelemetry+api@1.0.4
+      '@opentelemetry/instrumentation-http': 0.27.0_@opentelemetry+api@1.0.4
       '@opentelemetry/resources': 1.0.1_@opentelemetry+api@1.0.4
       '@opentelemetry/sdk-node': 0.27.0_@opentelemetry+api@1.0.4
       '@opentelemetry/sdk-trace-base': 1.0.1_@opentelemetry+api@1.0.4
@@ -7863,6 +7899,7 @@ packages:
       jsonwebtoken: 8.5.1
       node-fetch: 2.6.7
       node-schedule: 2.1.0
+      opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
       tsc-alias: 1.4.2
@@ -8035,7 +8072,7 @@ packages:
     dev: false
 
   file:projects/notifications.tgz:
-    resolution: {integrity: sha512-Td0w7Fd6KRoYKQgRZif296TPvDEx1jrctS2xjYXRpLPwjb7/S8eSc6d2VNc3XYSVcT06YrPIG1DrQqCQR7Peww==, tarball: file:projects/notifications.tgz}
+    resolution: {integrity: sha512-7B8SDUHyFPTOo9Bd2xWAigQ4UKQfELtsDdIws13+ZbZUG5kZH+NU6iSEphOAUsBwl2k8VHf9tcW50jgQue8jhg==, tarball: file:projects/notifications.tgz}
     name: '@rush-temp/notifications'
     version: 0.0.0
     dependencies:
@@ -8061,6 +8098,7 @@ packages:
       jest: 27.4.7_ts-node@10.7.0
       node-fetch: 2.6.7
       nodemon: 2.0.15
+      opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
       ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1

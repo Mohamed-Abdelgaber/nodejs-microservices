@@ -36,7 +36,7 @@ export class RabbitMqMessageBus implements MessageBus {
     this.channel.publish(
       this.dependencies.serviceName,
       '',
-      Buffer.from(JSON.stringify(command.payload)),
+      Buffer.from(JSON.stringify({ payload: command.payload, context })),
       {
         headers: {
           service: this.dependencies.serviceName,
@@ -51,7 +51,7 @@ export class RabbitMqMessageBus implements MessageBus {
     this.channel.publish(
       this.dependencies.serviceName,
       '',
-      Buffer.from(JSON.stringify(event.payload)),
+      Buffer.from(JSON.stringify({ payload: event.payload, context })),
       {
         headers: {
           service: this.dependencies.serviceName,
@@ -77,9 +77,9 @@ export class RabbitMqMessageBus implements MessageBus {
     });
 
     await this.channel.consume(`${service}.${command}`, async (message) => {
-      await callback(new Command(service, JSON.parse(message.content.toString())), {
-        resourceId: '',
-      });
+      const { payload, context } = JSON.parse(message.content.toString());
+
+      await callback(new Command(service, payload), context);
 
       this.channel.ack(message);
     });
@@ -100,9 +100,9 @@ export class RabbitMqMessageBus implements MessageBus {
     });
 
     await this.channel.consume(`${service}.${event}`, async (message) => {
-      await callback(new DomainEvent(service, JSON.parse(message.content.toString())), {
-        resourceId: '',
-      });
+      const { payload, context } = JSON.parse(message.content.toString());
+
+      await callback(new DomainEvent(service, payload), context);
 
       this.channel.ack(message);
     });

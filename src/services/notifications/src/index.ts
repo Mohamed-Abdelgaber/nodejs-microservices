@@ -20,7 +20,9 @@ import { container } from './container';
   const subscriberPromises = subscribers.map((subscriber) => {
     const [service, event] = subscriber.type.split('.');
 
-    return messageBus.subscribeToEvent(event, service, (event) => subscriber.handle(event));
+    return messageBus.subscribeToEvent(event, service, (event, context) =>
+      subscriber.handle(event, context),
+    );
   });
 
   await Promise.all(subscriberPromises);

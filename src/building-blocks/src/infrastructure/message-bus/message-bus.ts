@@ -1,8 +1,9 @@
 import { Command } from '@app/command';
 import { DomainEvent } from '@core/domain-event';
+import { SpanContext } from 'opentracing';
 
 export interface MessageContext {
-  resourceId: string;
+  spanContext: SpanContext;
 }
 
 export interface MessageBus {

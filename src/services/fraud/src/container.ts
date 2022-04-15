@@ -1,10 +1,17 @@
 import { FraudController } from '@api/fraud/fraud.controller';
 import { Server } from '@api/server';
 import { FraudCheckServiceImpl } from '@app/services/fraud-check-service/fraud-check.service';
-import { ConsulServiceDiscovery, ContainerBuilder } from '@krater/building-blocks';
+import { ConsulServiceDiscovery, ContainerBuilder, TracerBuilder } from '@krater/building-blocks';
 import { asClass, asValue } from 'awilix';
+import * as opentracing from 'opentracing';
 
 export const container = () => {
+  const tracerBuilder = new TracerBuilder('fraud').build();
+
+  opentracing.initGlobalTracer(tracerBuilder);
+
+  const tracer = opentracing.globalTracer();
+
   const appContainer = new ContainerBuilder()
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setCommandHandlers([])
@@ -20,6 +27,7 @@ export const container = () => {
           consulUrl: 'http://localhost:8500',
         }))
         .singleton(),
+      tracer: asValue(tracer),
     })
     .build();
 

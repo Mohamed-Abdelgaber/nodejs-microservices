@@ -1,6 +1,5 @@
 import { Controller } from '@api/controller';
 import { EventSubscriber } from '@app/event-subscriber';
-import { InMemoryEventDispatcher } from '@app/in-memory-event-dispatcher';
 import { UnitOfWorkRepository } from '@krater/database';
 import {
   asClass,
@@ -90,10 +89,6 @@ export class ContainerBuilder {
   public setSubscribers(subscribers: Resolver<EventSubscriber<any>>[]) {
     this.container.register({
       subscribers: registerAsArray(subscribers),
-    });
-
-    this.container.register({
-      eventDispatcher: asClass(InMemoryEventDispatcher).singleton(),
     });
 
     return this;

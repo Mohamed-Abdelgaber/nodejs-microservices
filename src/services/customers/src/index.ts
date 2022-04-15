@@ -46,8 +46,6 @@ import * as opentracing from 'opentracing';
 
     const span = tracer.startSpan('do_something');
 
-    console.log({ context: span.context() });
-
     span.setTag('alpha', '200');
     span.setTag('beta', '50');
     span.log({ state: 'waiting' });
