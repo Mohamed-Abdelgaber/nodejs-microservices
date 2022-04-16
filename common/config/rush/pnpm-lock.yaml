@@ -53,6 +53,7 @@ specifiers:
   pg: ~8.7.1
   prettier: ~2.5.1
   pretty-quick: ~3.1.2
+  prom-client: ~14.0.1
   prometheus-api-metrics: ~3.2.1
   ts-jest: ~27.1.2
   tsc-alias: ~1.4.2
@@ -77,8 +78,8 @@ dependencies:
   '@rush-temp/building-blocks': file:projects/building-blocks.tgz
   '@rush-temp/customers': file:projects/customers.tgz
   '@rush-temp/database': file:projects/database.tgz
-  '@rush-temp/fraud': file:projects/fraud.tgz
-  '@rush-temp/notifications': file:projects/notifications.tgz
+  '@rush-temp/fraud': file:projects/fraud.tgz_prom-client@14.0.1
+  '@rush-temp/notifications': file:projects/notifications.tgz_prom-client@14.0.1
   '@types/amqplib': 0.8.2
   '@types/consul': 0.40.0
   '@types/express': 4.17.13
@@ -113,7 +114,8 @@ dependencies:
   pg: 8.7.3
   prettier: 2.5.1
   pretty-quick: 3.1.3_prettier@2.5.1
-  prometheus-api-metrics: 3.2.1
+  prom-client: 14.0.1
+  prometheus-api-metrics: 3.2.1_prom-client@14.0.1
   ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
   tsc-alias: 1.4.2
   typescript: 4.5.5
@@ -6451,19 +6453,6 @@ packages:
       tdigest: 0.1.1
     dev: false
 
-  /prometheus-api-metrics/3.2.1:
-    resolution: {integrity: sha512-Dz1rLfUFwpel7fs22Cd1U1sKixXgQ/tqvZXF710ldCDndRatejuIc5eqcpNfYu4MAW/u5rlnDWpOS9eOradKNA==}
-    peerDependencies:
-      prom-client: '>=12 <14'
-    dependencies:
-      '@types/express': 4.17.13
-      '@types/express-serve-static-core': 4.17.28
-      '@types/koa': 2.13.4
-      debug: 3.2.7
-      lodash.get: 4.4.2
-      pkginfo: 0.4.1
-    dev: false
-
   /prometheus-api-metrics/3.2.1_prom-client@14.0.1:
     resolution: {integrity: sha512-Dz1rLfUFwpel7fs22Cd1U1sKixXgQ/tqvZXF710ldCDndRatejuIc5eqcpNfYu4MAW/u5rlnDWpOS9eOradKNA==}
     peerDependencies:
@@ -8079,8 +8068,9 @@ packages:
       - utf-8-validate
     dev: false
 
-  file:projects/fraud.tgz:
-    resolution: {integrity: sha512-Xs5H+xN78IU65CF5hJjunXh8cEj9U8pG3bU9HfBObbagMElzzR/tVTE0yAfwF+52AkHIEiPW7RTmXs0Evml9HQ==, tarball: file:projects/fraud.tgz}
+  file:projects/fraud.tgz_prom-client@14.0.1:
+    resolution: {integrity: sha512-VzoDrT8QxIoBNJ/zWIidUOrPTWcqUhlHzdKtmUrnBiIwCMJ+GMqJyuzpz3Ep4NeP7A8roPWiugsg233pvw1bFA==, tarball: file:projects/fraud.tgz}
+    id: file:projects/fraud.tgz
     name: '@rush-temp/fraud'
     version: 0.0.0
     dependencies:
@@ -8108,6 +8098,7 @@ packages:
       opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
+      prometheus-api-metrics: 3.2.1_prom-client@14.0.1
       ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
       ts-node: 10.7.0_f94da96e4d78a751cdd66b59796b8fdd
       tsc-alias: 1.4.2
@@ -8124,12 +8115,14 @@ packages:
       - eslint-plugin-react
       - eslint-plugin-react-hooks
       - node-notifier
+      - prom-client
       - supports-color
       - utf-8-validate
     dev: false
 
-  file:projects/notifications.tgz:
-    resolution: {integrity: sha512-7B8SDUHyFPTOo9Bd2xWAigQ4UKQfELtsDdIws13+ZbZUG5kZH+NU6iSEphOAUsBwl2k8VHf9tcW50jgQue8jhg==, tarball: file:projects/notifications.tgz}
+  file:projects/notifications.tgz_prom-client@14.0.1:
+    resolution: {integrity: sha512-pLqrjPNvZH6VnBLRs7QCKWjrfOy4BNjFxq0fI9nMbxpQenwUe2WVI/yu6SlgmONpw97Svm/g5O8o7MmVXAf6Zw==, tarball: file:projects/notifications.tgz}
+    id: file:projects/notifications.tgz
     name: '@rush-temp/notifications'
     version: 0.0.0
     dependencies:
@@ -8158,6 +8151,7 @@ packages:
       opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
+      prometheus-api-metrics: 3.2.1_prom-client@14.0.1
       ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
       ts-node: 10.7.0_f94da96e4d78a751cdd66b59796b8fdd
       tsc-alias: 1.4.2
@@ -8175,6 +8169,7 @@ packages:
       - eslint-plugin-react
       - eslint-plugin-react-hooks
       - node-notifier
+      - prom-client
       - supports-color
       - utf-8-validate
     dev: false

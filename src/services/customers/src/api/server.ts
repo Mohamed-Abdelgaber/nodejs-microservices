@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import { Controller, Logger } from '@krater/building-blocks';
 import apiMetrics from 'prometheus-api-metrics';
+import promClient from 'prom-client';
 
 interface Dependencies {
   logger: Logger;
@@ -17,7 +18,13 @@ export class Server {
 
     this.app.use(apiMetrics());
 
+    const counter = new promClient.Counter({
+      name: 'health_count',
+      help: 'health count for customers ms',
+    });
+
     this.app.get('/health', (_, res) => {
+      counter.inc();
       res.sendStatus(200);
     });
 

@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import { Controller, Logger } from '@krater/building-blocks';
+import apiMetrics from 'prometheus-api-metrics';
 
 interface Dependencies {
   logger: Logger;
@@ -13,6 +14,8 @@ export class Server {
     this.app = express();
 
     this.app.use(express.json());
+
+    this.app.use(apiMetrics());
 
     this.app.get('/health', (_, res) => res.sendStatus(200));
 

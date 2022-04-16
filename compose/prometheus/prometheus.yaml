@@ -11,6 +11,15 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:4000']
 
+  - job_name: 'fraud'
+    static_configs:
+      - targets: ['host.docker.internal:4200']
+
+  - job_name: 'notifications'
+    static_configs:
+      - targets: ['host.docker.internal:4500']
+
   - job_name: 'rabbitmq'
     static_configs:
-      - targets: ['rabbitmq:15692']
+      - targets: ['host.docker.internal:15692']
+  

@@ -78,9 +78,9 @@ services:
     ports:
       - 3000:3000
 
-  influxdb:
-    image: influxdb
-    container_name: influxdb
-    restart: always
-    ports:
-      - 8086:8086
+  # influxdb:
+  #   image: influxdb
+  #   container_name: influxdb
+  #   restart: always
+  #   ports:
+  #     - 8086:8086

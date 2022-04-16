@@ -23,7 +23,8 @@
     "dotenv": "~16.0.0",
     "node-fetch": "2",
     "consul": "~0.40.0",
-    "opentracing": "~0.14.7"
+    "opentracing": "~0.14.7",
+    "prometheus-api-metrics": "~3.2.1"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",
