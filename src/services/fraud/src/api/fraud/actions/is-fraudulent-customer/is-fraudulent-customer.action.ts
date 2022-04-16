@@ -13,22 +13,19 @@ export const isFraudulentCustomerActionValidation = celebrate({
     customerId: Joi.string().required(),
   },
 });
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const isFraudulentCustomerAction =
   ({ fraudCheckService, tracer }: Dependencies): RequestHandler =>
   async (req, res, next) => {
     const ctx = tracer.extract(FORMAT_HTTP_HEADERS, req.headers);
 
-    const span = tracer.startSpan('check fraudulent', {
+    const span = tracer.startSpan('Check if customer is Fraudulent', {
       childOf: ctx,
     });
 
     span.log({
       msg: '#test',
     });
-
-    await delay(3000);
 
     span.finish();
 

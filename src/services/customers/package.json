@@ -25,7 +25,9 @@
     "consul": "~0.40.0",
     "node-vault": "~0.9.22",
     "opentracing": "~0.14.7",
-    "@opentelemetry/api": "~1.0.4"
+    "@opentelemetry/api": "~1.0.4",
+    "prometheus-api-metrics": "~3.2.1",
+    "prom-client": "~14.0.1"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",

@@ -53,6 +53,7 @@ specifiers:
   pg: ~8.7.1
   prettier: ~2.5.1
   pretty-quick: ~3.1.2
+  prometheus-api-metrics: ~3.2.1
   ts-jest: ~27.1.2
   tsc-alias: ~1.4.2
   typescript: ~4.5.3
@@ -112,6 +113,7 @@ dependencies:
   pg: 8.7.3
   prettier: 2.5.1
   pretty-quick: 3.1.3_prettier@2.5.1
+  prometheus-api-metrics: 3.2.1
   ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
   tsc-alias: 1.4.2
   typescript: 4.5.5
@@ -2569,6 +2571,10 @@ packages:
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+    dev: false
+
+  /bintrees/1.0.1:
+    resolution: {integrity: sha1-DmVcm5wkNeqraL9AJyJtK1WjRSQ=}
     dev: false
 
   /bitsyntax/0.1.0:
@@ -5608,6 +5614,10 @@ packages:
       p-locate: 4.1.0
     dev: false
 
+  /lodash.get/4.4.2:
+    resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
+    dev: false
+
   /lodash.includes/4.3.0:
     resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=}
     dev: false
@@ -6335,6 +6345,11 @@ packages:
       find-up: 2.1.0
     dev: false
 
+  /pkginfo/0.4.1:
+    resolution: {integrity: sha1-tUGO8EOd5UJfxJlQQtztFPsqhP8=}
+    engines: {node: '>= 0.4.0'}
+    dev: false
+
   /pluralize/8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
@@ -6427,6 +6442,40 @@ packages:
   /progress/2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
     engines: {node: '>=0.4.0'}
+    dev: false
+
+  /prom-client/14.0.1:
+    resolution: {integrity: sha512-HxTArb6fkOntQHoRGvv4qd/BkorjliiuO2uSWC2KC17MUTKYttWdDoXX/vxOhQdkoECEM9BBH0pj2l8G8kev6w==}
+    engines: {node: '>=10'}
+    dependencies:
+      tdigest: 0.1.1
+    dev: false
+
+  /prometheus-api-metrics/3.2.1:
+    resolution: {integrity: sha512-Dz1rLfUFwpel7fs22Cd1U1sKixXgQ/tqvZXF710ldCDndRatejuIc5eqcpNfYu4MAW/u5rlnDWpOS9eOradKNA==}
+    peerDependencies:
+      prom-client: '>=12 <14'
+    dependencies:
+      '@types/express': 4.17.13
+      '@types/express-serve-static-core': 4.17.28
+      '@types/koa': 2.13.4
+      debug: 3.2.7
+      lodash.get: 4.4.2
+      pkginfo: 0.4.1
+    dev: false
+
+  /prometheus-api-metrics/3.2.1_prom-client@14.0.1:
+    resolution: {integrity: sha512-Dz1rLfUFwpel7fs22Cd1U1sKixXgQ/tqvZXF710ldCDndRatejuIc5eqcpNfYu4MAW/u5rlnDWpOS9eOradKNA==}
+    peerDependencies:
+      prom-client: '>=12 <14'
+    dependencies:
+      '@types/express': 4.17.13
+      '@types/express-serve-static-core': 4.17.28
+      '@types/koa': 2.13.4
+      debug: 3.2.7
+      lodash.get: 4.4.2
+      pkginfo: 0.4.1
+      prom-client: 14.0.1
     dev: false
 
   /prompts/2.4.2:
@@ -7185,6 +7234,12 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: false
 
+  /tdigest/0.1.1:
+    resolution: {integrity: sha1-Ljyyw56kSeVdHmzZEReszKRYgCE=}
+    dependencies:
+      bintrees: 1.0.1
+    dev: false
+
   /terminal-link/2.1.1:
     resolution: {integrity: sha512-un0FmiRUQNr5PJqy9kP7c40F5BOfpGlYTrxonDChEZB7pzZxRNp/bt+ymiy9/npwXya9KH99nJ/GXFIiUkYGFQ==}
     engines: {node: '>=8'}
@@ -7920,7 +7975,7 @@ packages:
     dev: false
 
   file:projects/customers.tgz:
-    resolution: {integrity: sha512-rR4OPyx8w3mbtmRXkRCEQLsNfu9qzvgS1k6sfp9cB533vPy40cn/W6qtglABcmi95BVNnxINnV8ucb8t3s7vWQ==, tarball: file:projects/customers.tgz}
+    resolution: {integrity: sha512-kgN3xCeHbz2/SyACICdX5KQCddSoOJUQ9TXdevum0OzedMOvQIUSen+zsP5sB8orKUXqVH/H71SjOGPesleKLQ==, tarball: file:projects/customers.tgz}
     name: '@rush-temp/customers'
     version: 0.0.0
     dependencies:
@@ -7952,6 +8007,8 @@ packages:
       opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
+      prom-client: 14.0.1
+      prometheus-api-metrics: 3.2.1_prom-client@14.0.1
       ts-jest: 27.1.4_fa1bd615639de41eb508033fadee58f1
       ts-node: 10.7.0_f94da96e4d78a751cdd66b59796b8fdd
       tsc-alias: 1.4.2

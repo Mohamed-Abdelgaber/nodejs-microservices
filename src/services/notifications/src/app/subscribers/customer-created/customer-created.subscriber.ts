@@ -7,8 +7,6 @@ interface Dependencies {
   tracer: Tracer;
 }
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export class CustomerCreatedSubscriber implements EventSubscriber<CustomerCreatedEvent> {
   public readonly type = `customers.${CustomerCreatedEvent.name}`;
 
@@ -19,11 +17,9 @@ export class CustomerCreatedSubscriber implements EventSubscriber<CustomerCreate
 
     const ctx = this.dependencies.tracer.extract(FORMAT_TEXT_MAP, context.spanContext);
 
-    const span = this.dependencies.tracer.startSpan('send notification', {
+    const span = this.dependencies.tracer.startSpan('Send email notification to Customer', {
       childOf: ctx,
     });
-
-    await delay(2000);
 
     span.finish();
   }

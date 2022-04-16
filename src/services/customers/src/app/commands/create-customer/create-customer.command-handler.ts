@@ -23,7 +23,7 @@ export class CreateCustomerCommandHandler
   constructor(private readonly dependencies: Dependencies) {}
 
   public async handle({ payload }: CreateCustomerCommand): Promise<CreateCustomerCommandResult> {
-    const span = this.dependencies.tracer.startSpan('make_request');
+    const span = this.dependencies.tracer.startSpan('Create Customer Command');
 
     const headers = {};
 
