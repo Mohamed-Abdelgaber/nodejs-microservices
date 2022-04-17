@@ -455,6 +455,10 @@
     {
       "packageName": "@krater/notifications",
       "projectFolder": "src/services/notifications"
+    },
+    {
+      "packageName": "@krater/api-gateway",
+      "projectFolder": "src/api-gateway"
     }
   ]
 }

@@ -3,9 +3,9 @@ require('dotenv').config();
 
 import { Logger, MessageBus, ServiceDiscovery, TracerBuilder } from '@krater/building-blocks';
 import { Application } from 'express';
-import { container } from './container';
 import Vault from 'node-vault';
 import * as opentracing from 'opentracing';
+import { container } from './container';
 
 (async () => {
   const appContainer = container();
@@ -26,12 +26,12 @@ import * as opentracing from 'opentracing';
     apiVersion: 'v1',
   });
 
-  const result = await vault.approleLogin({
-    role_id: process.env.ROLE_ID,
-    secret_id: process.env.SECRET_ID,
-  });
+  // const result = await vault.approleLogin({
+  //   role_id: process.env.ROLE_ID,
+  //   secret_id: process.env.SECRET_ID,
+  // });
 
-  vault.token = result.auth.client_token;
+  vault.token = 'secret';
 
   const { data } = await vault.read('secret/data/customers-service/config', {});
 
@@ -67,7 +67,7 @@ import * as opentracing from 'opentracing';
       name: 'customers',
       health: {
         endpoint: '/health',
-        intervalSeconds: 5,
+        intervalSeconds: 30,
         timeoutSeconds: 5,
       },
     });
