@@ -459,6 +459,10 @@
     {
       "packageName": "@krater/api-gateway",
       "projectFolder": "src/api-gateway"
+    },
+    {
+      "packageName": "@krater/catalogue",
+      "projectFolder": "src/services/catalogue"
     }
   ]
 }
