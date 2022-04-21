@@ -1,30 +1,27 @@
-/* eslint-disable import/first */
-require('dotenv').config();
-import { Logger, ServiceDiscovery } from '@krater/building-blocks';
-import { Application } from 'express';
-import { container } from './container';
+import { config } from 'dotenv';
+import { ServiceBuilder } from '@krater/building-blocks';
+import { asClass } from 'awilix';
+import { FraudController } from '@api/fraud/fraud.controller';
+import { FraudCheckServiceImpl } from '@app/services/fraud-check-service/fraud-check.service';
+
+config();
 
 (async () => {
-  const appContainer = container();
+  const service = new ServiceBuilder()
+    .setName('fraud')
+    .useRabbitMQ('amqp://localhost')
+    .useConsul('http://localhost:8500')
+    .setCommandHandlers([])
+    .setQueryHandlers([])
+    .setControllers([asClass(FraudController)])
+    .setEventSubscribers([])
+    .setCustom({
+      fraudCheckService: asClass(FraudCheckServiceImpl).singleton(),
+    })
+    .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
+    .build();
 
-  const app = appContainer.resolve<Application>('app');
-  const logger = appContainer.resolve<Logger>('logger');
-  const serviceDiscovery = appContainer.resolve<ServiceDiscovery>('serviceDiscovery');
+  const port = Number(process.env.APP_PORT) ?? 4000;
 
-  const PORT = process.env.APP_PORT ?? 4000;
-
-  app.listen(PORT, async () => {
-    logger.info(`Fraud service listening on http://localhost:${PORT}`);
-
-    await serviceDiscovery.registerService({
-      address: '127.0.0.1',
-      port: Number(PORT),
-      name: 'fraud',
-      health: {
-        endpoint: '/health',
-        intervalSeconds: 5,
-        timeoutSeconds: 5,
-      },
-    });
-  });
+  await service.listen(port);
 })();

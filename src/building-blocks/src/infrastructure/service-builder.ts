@@ -15,12 +15,18 @@ import {
   EventSubscriber,
   InMemoryCommandBus,
   InMemoryQueryBus,
+  QueryHandler,
 } from '..';
 import { registerAsArray } from './container';
 import { Logger, logger } from './logger';
 import { MessageBus, RabbitMqMessageBus } from './message-bus';
 import { TracerBuilder } from './tracer';
 import * as opentracing from 'opentracing';
+import { ConsulServiceDiscovery, ServiceDiscovery } from './service-discovery';
+
+interface CustomResolution {
+  [key: string]: Resolver<any>;
+}
 
 export class ServiceBuilder {
   private serviceName: string;
@@ -70,12 +76,18 @@ export class ServiceBuilder {
   }
 
   public setCommandHandlers(commandHandlers: Resolver<CommandHandler<any, any>>[]) {
-    if (!this.container.hasRegistration('messageBus')) {
-      throw new Error("Can't subscribe to command. Message Bus is not set.");
-    }
-
     this.container.register({
       commandHandlers: registerAsArray(commandHandlers),
+      commandBus: asClass(InMemoryCommandBus).singleton(),
+    });
+
+    return this;
+  }
+
+  public setQueryHandlers(queryHandlers: Resolver<QueryHandler<any, any>>[]) {
+    this.container.register({
+      queryHandlers: registerAsArray(queryHandlers),
+      queryBus: asClass(InMemoryQueryBus).singleton(),
     });
 
     return this;
@@ -106,6 +118,24 @@ export class ServiceBuilder {
     return this;
   }
 
+  public useConsul(url: string) {
+    this.container.register({
+      serviceDiscovery: asClass(ConsulServiceDiscovery)
+        .inject(() => ({
+          consulUrl: url,
+        }))
+        .singleton(),
+    });
+
+    return this;
+  }
+
+  public setCustom(props: CustomResolution) {
+    this.container.register(props);
+
+    return this;
+  }
+
   public build() {
     return {
       listen: async (port: number) => {
@@ -117,13 +147,11 @@ export class ServiceBuilder {
           server: asClass(Server).singleton(),
         });
 
-        this.loadBrokers();
-
         const messageBus = this.container.resolve<MessageBus>('messageBus');
 
         await messageBus.init();
 
-        await Promise.all([this.registerCommandHandlers(), this.registerEventSubscribers()]);
+        this.registerEventSubscribers();
 
         const server = this.container.resolve<Server>('server');
 
@@ -133,32 +161,24 @@ export class ServiceBuilder {
 
         const app = this.container.resolve<Application>('app');
 
-        app.listen(port, () => {
+        const serviceDiscovery = this.container.resolve<ServiceDiscovery>('serviceDiscovery');
+
+        app.listen(port, async () => {
+          await serviceDiscovery.registerService({
+            port,
+            address: '127.0.0.1',
+            name: this.serviceName,
+            health: {
+              endpoint: '/health',
+              intervalSeconds: 5,
+              timeoutSeconds: 5,
+            },
+          });
+
           logger.info(`Service started listening on http://localhost:${port}`);
         });
       },
     };
-  }
-
-  private loadBrokers() {
-    this.container.register({
-      commandBus: asClass(InMemoryCommandBus).singleton(),
-      queryBus: asClass(InMemoryQueryBus).singleton(),
-    });
-  }
-
-  private async registerCommandHandlers() {
-    const commandHandlers = this.container.resolve<CommandHandler<any, any>[]>('commandHandlers');
-    const messageBus = this.container.resolve<MessageBus>('messageBus');
-
-    const promises = commandHandlers.map((commandHandler) => {
-      return messageBus.subscribeToCommand(
-        this.getConstructorName(commandHandler).replace('Handler', ''),
-        this.serviceName,
-        (command, context) => commandHandler.handle(command, context),
-      );
-    });
-    await Promise.all(promises);
   }
 
   private async registerEventSubscribers() {
@@ -173,9 +193,5 @@ export class ServiceBuilder {
       );
     });
     await Promise.all(promises);
-  }
-
-  private getConstructorName(object: object) {
-    return object.constructor.name;
   }
 }

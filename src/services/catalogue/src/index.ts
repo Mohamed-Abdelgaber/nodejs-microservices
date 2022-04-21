@@ -1,16 +1,23 @@
-import { SayHelloCommandHandler } from '@app/commands/say-hello/say-hello.command-handler';
+import { config } from 'dotenv';
 import { SayHelloSubscriber } from '@app/subscribers/say-hello/say-hello.subscriber';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
+
+config();
 
 (async () => {
   const service = new ServiceBuilder()
     .setName('catalogue')
     .useRabbitMQ('amqp://localhost')
-    .setCommandHandlers([asClass(SayHelloCommandHandler).singleton()])
-    .setEventSubscribers([asClass(SayHelloSubscriber).singleton()])
+    .setCommandHandlers([])
+    .setQueryHandlers([])
     .setControllers([])
+    .loadActions([])
+    .useConsul('http://localhost:8500')
+    .setEventSubscribers([asClass(SayHelloSubscriber).singleton()])
     .build();
 
-  await service.listen(6100);
+  const port = Number(process.env.APP_PORT) ?? 4000;
+
+  await service.listen(port);
 })();

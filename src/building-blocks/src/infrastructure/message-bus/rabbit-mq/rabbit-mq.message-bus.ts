@@ -1,4 +1,3 @@
-import { Command } from '@app/command';
 import { DomainEvent } from '@core/domain-event';
 import { MessageBus, MessageContext } from '../message-bus';
 import amqp, { Channel } from 'amqplib';
@@ -32,21 +31,6 @@ export class RabbitMqMessageBus implements MessageBus {
     });
   }
 
-  public async sendCommand(command: Command<{}>, context: MessageContext): Promise<void> {
-    this.channel.publish(
-      this.dependencies.serviceName,
-      '',
-      Buffer.from(JSON.stringify({ payload: command.payload, context })),
-      {
-        headers: {
-          service: this.dependencies.serviceName,
-          command: command.constructor.name,
-          type: MessageType.Command,
-        },
-      },
-    );
-  }
-
   public async sendEvent(event: DomainEvent<{}>, context: MessageContext): Promise<void> {
     this.channel.publish(
       this.dependencies.serviceName,
@@ -62,35 +46,16 @@ export class RabbitMqMessageBus implements MessageBus {
     );
   }
 
-  public async subscribeToCommand(
-    command: string,
-    service: string,
-    callback: (command: Command, context: MessageContext) => Promise<void>,
-  ): Promise<void> {
-    await this.channel.assertQueue(`${service}.${command}`);
-
-    await this.channel.bindQueue(`${service}.${command}`, service, '', {
-      service,
-      'x-match': 'all',
-      type: MessageType.Command,
-      command: command,
-    });
-
-    await this.channel.consume(`${service}.${command}`, async (message) => {
-      const { payload, context } = JSON.parse(message.content.toString());
-
-      await callback(new Command(service, payload), context);
-
-      this.channel.ack(message);
-    });
-  }
-
   public async subscribeToEvent(
     event: string,
     service: string,
     callback: (EventType: DomainEvent<unknown>, context: MessageContext) => Promise<void>,
   ): Promise<void> {
     await this.channel.assertQueue(`${service}.${event}`);
+
+    await this.channel.assertExchange(service, 'headers', {
+      durable: true,
+    });
 
     await this.channel.bindQueue('', service, '', {
       service,

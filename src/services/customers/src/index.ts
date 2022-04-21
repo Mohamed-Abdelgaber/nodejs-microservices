@@ -14,6 +14,8 @@ config();
     .setControllers([asClass(CustomersController).singleton()])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
+    .setQueryHandlers([])
+    .useConsul('http://localhost:8500')
     .build();
 
   const port = Number(process.env.APP_PORT) || 4000;
