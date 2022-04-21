@@ -11,3 +11,5 @@ export * from './service-discovery';
 export * from './message-bus';
 
 export * from './tracer';
+
+export * from './service-builder';

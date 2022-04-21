@@ -12,7 +12,7 @@ export interface MessageBus {
   subscribeToCommand(
     command: string,
     service: string,
-    callback: (command: Command, context: MessageContext) => Promise<void>,
+    callback: (command: Command<any>, context: MessageContext) => Promise<void>,
   ): Promise<void>;
 
   subscribeToEvent(

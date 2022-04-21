@@ -4302,6 +4302,11 @@ packages:
       sshpk: 1.17.0
     dev: false
 
+  /http-status/1.5.1:
+    resolution: {integrity: sha512-EP6M4naWmtIrCHL1QfVHz6hsQb8dJLP5rDO1oPn03eAXD3CNVXgUqR5302gr3Gl8B/gVE1zz+Pmws7aJx+VMSw==}
+    engines: {node: '>= 0.4.0'}
+    dev: false
+
   /https-proxy-agent/5.0.0:
     resolution: {integrity: sha512-EkYm5BcKUGiduxzSt3Eppko+PiNWNEpa4ySk9vTC6wDsQJW9rHSa+UhGNJoRYp7bz6Ht1eaRIa6QaJqO5rCFbA==}
     engines: {node: '>= 6'}
@@ -7962,7 +7967,7 @@ packages:
     dev: false
 
   file:projects/building-blocks.tgz:
-    resolution: {integrity: sha512-dgL8k3XzhqY5di3f1LZEdRf5TjqzpXJcLINEJQyzZE7eJoOPlVRtBiTzu+8RK67N3O5j6vyTVji+NiqCCLEU8g==, tarball: file:projects/building-blocks.tgz}
+    resolution: {integrity: sha512-WfkD1MF9y5IW5fq6accotuqZyVBEGC2KE+U/dSsfaElCcoZZlE46oaCF2y6hr/61UkOcpuwdYacBJjTVlMn8cQ==, tarball: file:projects/building-blocks.tgz}
     name: '@rush-temp/building-blocks'
     version: 0.0.0
     dependencies:
@@ -7997,6 +8002,7 @@ packages:
       eslint-plugin-import: 2.24.0_eslint@7.32.0
       eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
       eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
+      http-status: 1.5.1
       husky: 7.0.4
       jest: 27.4.7
       jsonwebtoken: 8.5.1
@@ -8005,6 +8011,8 @@ packages:
       opentracing: 0.14.7
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
+      prom-client: 14.0.1
+      prometheus-api-metrics: 3.2.1_prom-client@14.0.1
       tsc-alias: 1.4.2
       typescript: 4.5.5
       uuid: 8.3.2

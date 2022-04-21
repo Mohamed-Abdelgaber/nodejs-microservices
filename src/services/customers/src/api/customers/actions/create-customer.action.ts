@@ -2,12 +2,14 @@ import {
   CreateCustomerCommand,
   CreateCustomerCommandPayload,
 } from '@app/commands/create-customer/create-customer.command';
-import { CommandBus } from '@krater/building-blocks';
+import { MessageBus } from '@krater/building-blocks';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { RequestHandler } from 'express';
+import { FORMAT_TEXT_MAP, SpanContext, Tracer } from 'opentracing';
 
 interface Dependencies {
-  commandBus: CommandBus;
+  messageBus: MessageBus;
+  tracer: Tracer;
 }
 
 export const createCustomerActionValidation = celebrate<CreateCustomerCommandPayload>({
@@ -19,11 +21,21 @@ export const createCustomerActionValidation = celebrate<CreateCustomerCommandPay
 }) as unknown as RequestHandler;
 
 const createCustomerAction =
-  ({ commandBus }: Dependencies): RequestHandler =>
-  (req, res, next) =>
-    commandBus
-      .handle(new CreateCustomerCommand(req.body))
-      .then((customer) => res.status(200).json(customer))
-      .catch(next);
+  ({ messageBus, tracer }: Dependencies): RequestHandler =>
+  async (req, res, next) => {
+    const span = tracer.startSpan('create-customer-action');
+
+    const ctx = {};
+
+    tracer.inject(span.context(), FORMAT_TEXT_MAP, ctx);
+
+    await messageBus.sendCommand(new CreateCustomerCommand(req.body), {
+      spanContext: ctx as SpanContext,
+    });
+
+    span.finish();
+
+    return res.sendStatus(202);
+  };
 
 export default createCustomerAction;

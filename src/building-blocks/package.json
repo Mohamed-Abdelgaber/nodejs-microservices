@@ -62,6 +62,9 @@
     "@opentelemetry/instrumentation": "~0.27.0",
     "@opentelemetry/instrumentation-fetch": "~0.27.0",
     "@opentelemetry/instrumentation-http": "~0.27.0",
-    "opentracing": "~0.14.7"
+    "opentracing": "~0.14.7",
+    "prometheus-api-metrics": "~3.2.1",
+    "prom-client": "~14.0.1",
+    "http-status": "~1.5.1"
   }
 }
