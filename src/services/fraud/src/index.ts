@@ -23,5 +23,7 @@ config();
 
   const port = Number(process.env.APP_PORT) ?? 4000;
 
-  await service.listen(port);
+  await service.bootstrap();
+
+  service.listen(port);
 })();

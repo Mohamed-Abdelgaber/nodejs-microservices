@@ -36,12 +36,7 @@ export class InMemoryCommandBus implements CommandBus {
       );
     }
 
-    return existingCommandHandler.handle(command, {
-      spanContext: {
-        toSpanId: () => '',
-        toTraceId: () => '',
-      },
-    });
+    return existingCommandHandler.handle(command);
   }
 
   private getConstructorName(object: object) {

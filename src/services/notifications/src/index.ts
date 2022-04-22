@@ -1,46 +1,25 @@
-/* eslint-disable import/first */
-require('dotenv').config();
+import { CustomerCreatedSubscriber } from '@app/subscribers/customer-created/customer-created.subscriber';
+import { ServiceBuilder } from '@krater/building-blocks';
+import { asClass } from 'awilix';
+import { config } from 'dotenv';
 
-import { EventSubscriber, Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
-import { Application } from 'express';
-import { container } from './container';
+config();
 
 (async () => {
-  const appContainer = container();
+  const service = new ServiceBuilder()
+    .setName('notifications')
+    .useRabbitMQ('amqp://localhost')
+    .useConsul('http://localhost:8500')
+    .setCommandHandlers([])
+    .setControllers([])
+    .setQueryHandlers([])
+    .setEventSubscribers([asClass(CustomerCreatedSubscriber).singleton()])
+    .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
+    .build();
 
-  const app = appContainer.resolve<Application>('app');
-  const logger = appContainer.resolve<Logger>('logger');
+  const port = Number(process.env.APP_PORT) ?? 4000;
 
-  const serviceDiscovery = appContainer.resolve<ServiceDiscovery>('serviceDiscovery');
-  const messageBus = appContainer.resolve<MessageBus>('messageBus');
-  const subscribers = appContainer.resolve<EventSubscriber<any>[]>('subscribers');
+  await service.bootstrap();
 
-  await messageBus.init();
-
-  const subscriberPromises = subscribers.map((subscriber) => {
-    const [service, event] = subscriber.type.split('.');
-
-    return messageBus.subscribeToEvent(event, service, (event, context) =>
-      subscriber.handle(event, context),
-    );
-  });
-
-  await Promise.all(subscriberPromises);
-
-  const PORT = process.env.APP_PORT ?? 4000;
-
-  app.listen(PORT, async () => {
-    logger.info(`Notifications service listening on http://localhost:${PORT}`);
-
-    await serviceDiscovery.registerService({
-      address: '127.0.0.1',
-      port: Number(PORT),
-      name: 'notifications',
-      health: {
-        endpoint: '/health',
-        intervalSeconds: 5,
-        timeoutSeconds: 5,
-      },
-    });
-  });
+  service.listen(port);
 })();

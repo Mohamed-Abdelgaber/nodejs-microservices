@@ -33,14 +33,12 @@ export class ServiceBuilder {
 
   private container: AwilixContainer = createContainer();
 
-  constructor() {
-    this.container.register({
-      logger: asValue(logger),
-    });
-  }
-
   public setName(name: string) {
     this.serviceName = name;
+
+    this.container.register({
+      logger: asValue(logger(name)),
+    });
 
     const tracerBuilder = new TracerBuilder(name).build();
 
@@ -138,7 +136,7 @@ export class ServiceBuilder {
 
   public build() {
     return {
-      listen: async (port: number) => {
+      bootstrap: async () => {
         const logger = this.container.resolve<Logger>('logger');
 
         logger.info('Loading service dependencies...');
@@ -158,27 +156,38 @@ export class ServiceBuilder {
         this.container.register({
           app: asValue(server.getApp()),
         });
-
+      },
+      listen: (port: number) => this.listen(port),
+      getApp: () => {
         const app = this.container.resolve<Application>('app');
 
-        const serviceDiscovery = this.container.resolve<ServiceDiscovery>('serviceDiscovery');
-
-        app.listen(port, async () => {
-          await serviceDiscovery.registerService({
-            port,
-            address: '127.0.0.1',
-            name: this.serviceName,
-            health: {
-              endpoint: '/health',
-              intervalSeconds: 5,
-              timeoutSeconds: 5,
-            },
-          });
-
-          logger.info(`Service started listening on http://localhost:${port}`);
-        });
+        return app;
       },
     };
+  }
+
+  public listen(port: number) {
+    const app = this.container.resolve<Application>('app');
+
+    const serviceDiscovery = this.container.resolve<ServiceDiscovery>('serviceDiscovery');
+    const logger = this.container.resolve<Logger>('logger');
+
+    app.listen(port, async () => {
+      await serviceDiscovery.registerService({
+        port,
+        address: '127.0.0.1',
+        name: this.serviceName,
+        health: {
+          endpoint: '/health',
+          intervalSeconds: 5,
+          timeoutSeconds: 5,
+        },
+      });
+
+      logger.info(`Service started listening on http://localhost:${port}`, {
+        port,
+      });
+    });
   }
 
   private async registerEventSubscribers() {

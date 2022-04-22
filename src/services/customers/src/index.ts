@@ -20,5 +20,13 @@ config();
 
   const port = Number(process.env.APP_PORT) || 4000;
 
-  await service.listen(port);
+  await service.bootstrap();
+
+  service.getApp().get('/test', (_, res) => {
+    res.status(200).json({
+      message: 'Howdy',
+    });
+  });
+
+  service.listen(port);
 })();

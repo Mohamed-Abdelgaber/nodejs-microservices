@@ -7,6 +7,8 @@ interface Dependencies {
   tracer: Tracer;
 }
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(() => resolve(true), ms));
+
 export class CustomerCreatedSubscriber implements EventSubscriber<CustomerCreatedEvent> {
   public readonly type = `customers.${CustomerCreatedEvent.name}`;
 
@@ -20,6 +22,8 @@ export class CustomerCreatedSubscriber implements EventSubscriber<CustomerCreate
     const span = this.dependencies.tracer.startSpan('Send email notification to Customer', {
       childOf: ctx,
     });
+
+    await wait(2000);
 
     span.finish();
   }

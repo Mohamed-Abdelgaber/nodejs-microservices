@@ -1,35 +1,23 @@
-require('dotenv').config();
+import { ServiceBuilder } from '@krater/building-blocks';
+import { config } from 'dotenv';
 
-import { Logger, MessageBus, ServiceDiscovery } from '@krater/building-blocks';
-import { Application } from 'express';
-import { container } from './container';
+config();
 
 (async () => {
-  const appContainer = container();
+  const service = new ServiceBuilder()
+    .setName('api-gateway')
+    .useRabbitMQ('amqp://localhost')
+    .useConsul('http://localhost:8500')
+    .loadActions([])
+    .setCommandHandlers([])
+    .setControllers([])
+    .setEventSubscribers([])
+    .setQueryHandlers([])
+    .build();
 
-  const app = appContainer.resolve<Application>('app');
-  const logger = appContainer.resolve<Logger>('logger');
+  const port = Number(process.env.APP_PORT) ?? 4000;
 
-  const serviceDiscovery = appContainer.resolve<ServiceDiscovery>('serviceDiscovery');
+  await service.bootstrap();
 
-  const messageBus = appContainer.resolve<MessageBus>('messageBus');
-
-  await messageBus.init();
-
-  const PORT = process.env.APP_PORT ?? 7000;
-
-  app.listen(PORT, async () => {
-    logger.info(`API Gateway listening on http://localhost:${PORT}`);
-
-    await serviceDiscovery.registerService({
-      address: '127.0.0.1',
-      port: Number(PORT),
-      name: 'api-gateway',
-      health: {
-        endpoint: '/health',
-        intervalSeconds: 30,
-        timeoutSeconds: 5,
-      },
-    });
-  });
+  service.listen(port);
 })();
