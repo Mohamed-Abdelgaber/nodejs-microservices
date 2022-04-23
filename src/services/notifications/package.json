@@ -19,7 +19,7 @@
     "awilix": "~6.0.0",
     "@krater/database": "~1.0.0",
     "express": "~4.17.2",
-    "celebrate": "~15.0.0",
+    "celebrate": "15.0.1",
     "dotenv": "~16.0.0",
     "node-fetch": "2",
     "consul": "~0.40.0",
