@@ -16,6 +16,7 @@ import {
   InMemoryCommandBus,
   InMemoryQueryBus,
   QueryHandler,
+  tracingMiddleware,
 } from '..';
 import { registerAsArray } from './container';
 import { Logger, logger } from './logger';
@@ -48,6 +49,7 @@ export class ServiceBuilder {
 
     this.container.register({
       tracer: asValue(tracer),
+      tracingMiddleware: asFunction(tracingMiddleware),
     });
 
     return this;

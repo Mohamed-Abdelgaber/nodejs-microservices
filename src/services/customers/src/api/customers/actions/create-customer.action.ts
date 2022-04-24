@@ -5,9 +5,11 @@ import {
 import { CommandBus } from '@krater/building-blocks';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { RequestHandler } from 'express';
+import { Tracer, FORMAT_HTTP_HEADERS } from 'opentracing';
 
 interface Dependencies {
   commandBus: CommandBus;
+  tracer: Tracer;
 }
 
 export const createCustomerActionValidation = celebrate<CreateCustomerCommandPayload>({
@@ -19,11 +21,14 @@ export const createCustomerActionValidation = celebrate<CreateCustomerCommandPay
 }) as unknown as RequestHandler;
 
 const createCustomerAction =
-  ({ commandBus }: Dependencies): RequestHandler =>
-  async (req, res, next) =>
-    commandBus
-      .handle(new CreateCustomerCommand(req.body))
+  ({ commandBus, tracer }: Dependencies): RequestHandler =>
+  async (req, res, next) => {
+    const ctx = tracer.extract(FORMAT_HTTP_HEADERS, req.headers);
+
+    return commandBus
+      .handle(new CreateCustomerCommand({ ...req.body, context: ctx }))
       .then((customer) => res.status(201).json(customer))
       .catch(next);
+  };
 
 export default createCustomerAction;

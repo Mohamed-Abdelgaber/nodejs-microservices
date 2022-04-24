@@ -7,14 +7,14 @@ config();
 
 (async () => {
   const service = new ServiceBuilder()
-    .setName('api-gateway')
     .useRabbitMQ('amqp://localhost')
-    .useConsul('http://localhost:8500')
-    .loadActions([])
+    .setName('api-gateway')
     .setCommandHandlers([])
-    .setControllers([asClass(CustomersController).singleton()])
+    .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
+    .setControllers([asClass(CustomersController).singleton()])
     .setQueryHandlers([])
+    .useConsul('http://localhost:8500')
     .build();
 
   const port = Number(process.env.APP_PORT) ?? 4000;

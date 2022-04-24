@@ -4,6 +4,7 @@ import { createCustomerActionValidation } from './actions/create-customer.action
 
 interface Dependencies {
   createCustomerAction: RequestHandler;
+  tracingMiddleware: RequestHandler;
 }
 
 export class CustomersController implements Controller {

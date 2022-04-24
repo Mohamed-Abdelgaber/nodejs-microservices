@@ -14,7 +14,7 @@ export const isFraudulentCustomerActionValidation = celebrate({
   },
 });
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(() => resolve(true), ms));
+export const wait = (ms: number) => new Promise((resolve) => setTimeout(() => resolve(true), ms));
 
 const isFraudulentCustomerAction =
   ({ fraudCheckService, tracer }: Dependencies): RequestHandler =>
@@ -26,10 +26,10 @@ const isFraudulentCustomerAction =
     });
 
     span.addTags({
-      type: 'action',
+      'x-type': 'action',
     });
 
-    await wait(2000);
+    // await wait(2000);
 
     span.finish();
 
