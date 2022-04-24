@@ -1,4 +1,6 @@
+import { CustomersController } from '@api/controllers/customers.controller';
 import { ServiceBuilder } from '@krater/building-blocks';
+import { asClass } from 'awilix';
 import { config } from 'dotenv';
 
 config();
@@ -10,7 +12,7 @@ config();
     .useConsul('http://localhost:8500')
     .loadActions([])
     .setCommandHandlers([])
-    .setControllers([])
+    .setControllers([asClass(CustomersController).singleton()])
     .setEventSubscribers([])
     .setQueryHandlers([])
     .build();
