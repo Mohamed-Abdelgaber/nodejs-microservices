@@ -25,5 +25,8 @@ export const openApiDocs = openApiJSDoc({
       },
     ],
   },
-  apis: [path.join(__dirname, '..', '..', 'api', '**', '*.action.ts')],
+  apis: [
+    path.join(__dirname, '..', '..', 'api', '**', '*.action.ts'),
+    path.join(__dirname, '..', '..', 'api', 'schemas', '**', '*.schema.ts'),
+  ],
 });

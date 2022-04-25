@@ -18,24 +18,7 @@ interface Dependencies {
  *       content:
  *         application/json:
  *          schema:
- *            type: object
- *            properties:
- *              firstName:
- *                type: string
- *                required: true
- *                nullable: false
- *                example: John
- *              lastName:
- *                type: string
- *                required: true
- *                nullable: false
- *                example: Doe
- *              email:
- *                type: email
- *                format: email
- *                required: true
- *                nullable: false
- *                example: john@doe.com
+ *            $ref: '#components/schemas/CreateCustomer'
  *     responses:
  *       201:
  *        description: New customer created successfully
@@ -69,6 +52,7 @@ interface Dependencies {
  *        description: Validation Error
  *       500:
  *         description: Internal Server Error
+ *
  */
 const createCustomerAction = ({ tracingMiddleware }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
