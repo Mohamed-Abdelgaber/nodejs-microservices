@@ -1,7 +1,9 @@
-import { CustomersController } from '@api/controllers/customers.controller';
+import { CustomersController } from '@api/customers/customers.controller';
+import { openApiDocs } from '@infrastructure/open-api/open-api.docs';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
 import { config } from 'dotenv';
+import * as swaggerUI from 'swagger-ui-express';
 
 config();
 
@@ -20,6 +22,8 @@ config();
   const port = Number(process.env.APP_PORT) ?? 4000;
 
   await service.bootstrap();
+
+  service.getApp().use('/api-docs', swaggerUI.serve, swaggerUI.setup(openApiDocs));
 
   service.listen(port);
 })();
