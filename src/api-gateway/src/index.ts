@@ -1,4 +1,5 @@
 import { CustomersController } from '@api/customers/customers.controller';
+import { FraudController } from '@api/fraud/fraud.controller';
 import { openApiDocs } from '@infrastructure/open-api/open-api.docs';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
@@ -14,7 +15,10 @@ config();
     .setCommandHandlers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
-    .setControllers([asClass(CustomersController).singleton()])
+    .setControllers([
+      asClass(CustomersController).singleton(),
+      asClass(FraudController).singleton(),
+    ])
     .setQueryHandlers([])
     .useConsul('http://localhost:8500')
     .build();

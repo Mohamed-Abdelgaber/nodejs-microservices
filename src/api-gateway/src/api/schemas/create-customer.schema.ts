@@ -1,5 +1,5 @@
 /**
- * @swagger
+ * @openapi
  *
  * components:
  *  schemas:

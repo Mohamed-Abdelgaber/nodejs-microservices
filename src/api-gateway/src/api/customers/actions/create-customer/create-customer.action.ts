@@ -6,7 +6,7 @@ interface Dependencies {
 }
 
 /**
- * @swagger
+ * @openapi
  *
  * /api/v1/customers:
  *   post:
@@ -25,25 +25,7 @@ interface Dependencies {
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: string
- *                  required: true
- *                  example: 1
- *                firstName:
- *                  type: string
- *                  required: true
- *                  example: John
- *                lastName:
- *                  type: string
- *                  required: true
- *                  example: Doe
- *                email:
- *                  type: string
- *                  format: email
- *                  required: true
- *                  example: john@doe.com
+ *              $ref: '#components/schemas/Customer'
  *       400:
  *        description: Business Rule Error
  *       401:
@@ -52,7 +34,6 @@ interface Dependencies {
  *        description: Validation Error
  *       500:
  *         description: Internal Server Error
- *
  */
 const createCustomerAction = ({ tracingMiddleware }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
