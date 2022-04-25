@@ -463,6 +463,10 @@
     {
       "packageName": "@krater/catalogue",
       "projectFolder": "src/services/catalogue"
+    },
+    {
+      "packageName": "@krater/identity",
+      "projectFolder": "src/services/identity"
     }
   ]
 }
