@@ -1,4 +1,4 @@
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 import { Command } from './command';
 import { CommandBus } from './command-bus';
 import { CommandHandler } from './command-handler';
@@ -31,7 +31,7 @@ export class InMemoryCommandBus implements CommandBus {
       this.existingCommandHandlers[this.getCommandHandlerName(command)];
 
     if (!existingCommandHandler) {
-      throw new AppError(
+      throw new KraterError(
         `Command Handler for command: "${this.getConstructorName(command)}" does not exist.`,
       );
     }

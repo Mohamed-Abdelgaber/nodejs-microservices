@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import crypto from 'crypto';
 import { RegisterServicePayload, ServiceDiscovery } from './service-discovery';
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 
 interface Dependencies {
   consulUrl: string;
@@ -50,7 +50,7 @@ export class ConsulServiceDiscovery implements ServiceDiscovery {
     });
 
     if (res.status !== 200) {
-      throw new AppError(`Can't connect ${name} service with Consul.`);
+      throw new KraterError(`Can't connect ${name} service with Consul.`);
     }
   }
 

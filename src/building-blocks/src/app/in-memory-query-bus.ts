@@ -1,4 +1,4 @@
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 import { Query } from './query';
 import { QueryBus } from './query-bus';
 import { QueryHandler } from './query-handler';
@@ -30,7 +30,7 @@ export class InMemoryQueryBus implements QueryBus {
     const existingQueryHandler = this.existingQueryHandlers[this.getQueryHandlerName(query)];
 
     if (!existingQueryHandler) {
-      throw new AppError(
+      throw new KraterError(
         `Query Handler for query: "${this.getConstructorName(query)}" does not exist.`,
       );
     }

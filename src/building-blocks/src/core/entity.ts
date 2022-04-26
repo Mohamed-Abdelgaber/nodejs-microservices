@@ -1,6 +1,6 @@
 import { BusinessRule } from '@core/business-rule';
 import { UniqueEntityID } from '@core/unique-entity-id';
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 import { BusinessRuleValidationError } from '@errors/business-rule-validation.error';
 import { AsyncFunction } from '@tools/async-function';
 
@@ -12,7 +12,7 @@ export abstract class Entity<PropsType extends object = {}> {
 
   protected static checkRule(
     rule: BusinessRule,
-    ErrorType: typeof AppError = BusinessRuleValidationError,
+    ErrorType: typeof KraterError = BusinessRuleValidationError,
   ): Promise<void> | void {
     if (rule.isBroken instanceof Promise || rule.isBroken instanceof AsyncFunction) {
       return (rule.isBroken() as Promise<boolean>).then((isBroken) => {

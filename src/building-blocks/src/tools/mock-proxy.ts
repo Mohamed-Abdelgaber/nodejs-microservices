@@ -1,4 +1,4 @@
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 
 export const createMockProxy = <Type>(objectName = 'mock') => {
   const cache = new Map<any, jest.Mock>();
@@ -24,7 +24,7 @@ export const createMockProxy = <Type>(objectName = 'mock') => {
 
 export const createProxyFromMock = <Type extends new (...args: any[]) => any>(mock: Type) => {
   if (!jest.isMockFunction(mock)) {
-    throw new AppError(`Expected ${mock} to be a jest mock.`);
+    throw new KraterError(`Expected ${mock} to be a jest mock.`);
   }
 
   const proxy = createMockProxy<InstanceType<Type>>();

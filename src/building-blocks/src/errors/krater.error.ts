@@ -1,8 +1,8 @@
-export class AppError extends Error {
+export class KraterError extends Error {
   constructor(message: string, public readonly name = 'AppError', public readonly errorCode = 500) {
     super(message);
 
-    Error.captureStackTrace(this, AppError.captureStackTrace);
+    Error.captureStackTrace(this, KraterError.captureStackTrace);
   }
 
   public toString() {

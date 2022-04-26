@@ -1,4 +1,4 @@
-export * from './app.error';
+export * from './krater.error';
 
 export * from './business-rule-validation.error';
 

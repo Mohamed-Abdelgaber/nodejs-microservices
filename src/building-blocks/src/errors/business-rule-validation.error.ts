@@ -1,6 +1,6 @@
-import { AppError } from './app.error';
+import { KraterError } from './krater.error';
 
-export class BusinessRuleValidationError extends AppError {
+export class BusinessRuleValidationError extends KraterError {
   constructor(message: string) {
     super(message, 'BusinessRuleValidationError', 400);
   }

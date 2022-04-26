@@ -1,6 +1,6 @@
-import { AppError } from '@errors/app.error';
+import { KraterError } from '@errors/krater.error';
 
-export class NotFoundError extends AppError {
+export class NotFoundError extends KraterError {
   constructor(message = 'Not Found.') {
     super(message, 'NotFoundError', 422);
   }
