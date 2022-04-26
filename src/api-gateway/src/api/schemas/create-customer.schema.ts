@@ -19,7 +19,6 @@
  *         type: string
  *         format: email
  *         example: john@doe.com
- *
  */
 
 export interface CreateCustomerSchema {

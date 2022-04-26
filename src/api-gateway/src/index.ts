@@ -1,5 +1,6 @@
 import { CustomersController } from '@api/customers/customers.controller';
 import { FraudController } from '@api/fraud/fraud.controller';
+import { IdentityController } from '@api/identity/identity.controller';
 import { openApiDocs } from '@infrastructure/open-api/open-api.docs';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
@@ -18,6 +19,7 @@ config();
     .setControllers([
       asClass(CustomersController).singleton(),
       asClass(FraudController).singleton(),
+      asClass(IdentityController).singleton(),
     ])
     .setQueryHandlers([])
     .useConsul('http://localhost:8500')
