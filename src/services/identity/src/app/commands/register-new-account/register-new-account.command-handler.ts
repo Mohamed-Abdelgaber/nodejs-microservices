@@ -1,6 +1,7 @@
 import { AccountEmailCheckerService } from '@core/account-email/account-email-checker.service';
 import { PasswordHashProviderService } from '@core/account-password/password-hash-provider.service';
 import { AccountRegistration } from '@core/account-registration/account-registration.aggregate-root';
+import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
 import { CommandHandler, MessageBus } from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { RegisterNewAccountCommand } from './register-new-account.command';
@@ -10,6 +11,7 @@ interface Dependencies {
   passwordHashProviderService: PasswordHashProviderService;
   messageBus: MessageBus;
   tracer: Tracer;
+  accountRegistrationRepository: AccountRegistrationRepository;
 }
 
 export class RegisterNewAccountCommandHandler implements CommandHandler<RegisterNewAccountCommand> {
@@ -46,6 +48,8 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
         spanContext: headers as SpanContext,
       }),
     );
+
+    await this.dependencies.accountRegistrationRepository.insert(accountRegistration);
 
     await Promise.all(eventPromises);
 

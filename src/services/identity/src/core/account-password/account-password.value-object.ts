@@ -32,4 +32,8 @@ export class AccountPassword extends ValueObject<AccountPasswordProps> {
   public async isValid(password: string, passwordHashProviderService: PasswordHashProviderService) {
     return passwordHashProviderService.isValidPassword(password, this.props.passwordHash);
   }
+
+  public getHash() {
+    return this.props.passwordHash;
+  }
 }

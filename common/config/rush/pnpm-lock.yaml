@@ -23,11 +23,13 @@ specifiers:
   '@rush-temp/identity': file:./projects/identity.tgz
   '@rush-temp/notifications': file:./projects/notifications.tgz
   '@types/amqplib': ~0.8.2
+  '@types/bcrypt': ~5.0.0
   '@types/consul': ~0.40.0
   '@types/express': ~4.17.13
   '@types/express-http-proxy': ~1.6.3
   '@types/jest': ~27.0.3
   '@types/jsonwebtoken': ~8.5.6
+  '@types/mongoose-delete': ~0.5.9
   '@types/node': ~16.11.12
   '@types/node-fetch': ~2.6.1
   '@types/node-schedule': ~1.3.2
@@ -53,6 +55,9 @@ specifiers:
   jest: ~27.4.5
   jsonwebtoken: ~8.5.1
   knex: ~0.95.15
+  mongoose: ~6.3.1
+  mongoose-delete: ~0.5.4
+  mongoose-id-validator: ~0.6.0
   node-fetch: '2'
   node-schedule: ~2.1.0
   node-vault: ~0.9.22
@@ -94,11 +99,13 @@ dependencies:
   '@rush-temp/identity': file:projects/identity.tgz
   '@rush-temp/notifications': file:projects/notifications.tgz_prom-client@14.0.1
   '@types/amqplib': 0.8.2
+  '@types/bcrypt': 5.0.0
   '@types/consul': 0.40.0
   '@types/express': 4.17.13
   '@types/express-http-proxy': 1.6.3
   '@types/jest': 27.0.3
   '@types/jsonwebtoken': 8.5.8
+  '@types/mongoose-delete': 0.5.9
   '@types/node': 16.11.27
   '@types/node-fetch': 2.6.1
   '@types/node-schedule': 1.3.2
@@ -124,6 +131,9 @@ dependencies:
   jest: 27.4.7
   jsonwebtoken: 8.5.1
   knex: 0.95.15_pg@8.7.3
+  mongoose: 6.3.1
+  mongoose-delete: 0.5.4_mongoose@6.3.1
+  mongoose-id-validator: 0.6.0
   node-fetch: 2.6.7
   node-schedule: 2.1.0
   node-vault: 0.9.22
@@ -2024,6 +2034,31 @@ packages:
       '@types/node': 16.11.27
     dev: false
 
+  /@types/mongoose-delete/0.5.9:
+    resolution: {integrity: sha512-ZPTmeP5UAUDTGbg3U0zr4Mf8cIg3YC8KsfxPDO6wFjms+yIGLbyt8xFEtWB08jjGJCQkGCZYU0aRV/efV7rgVw==}
+    dependencies:
+      mongoose: 6.3.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@types/mongoose-id-validator/0.6.3:
+    resolution: {integrity: sha512-laWIPwDYiMAlGSmQWT0h3+xeu9roRMqpbW5nnLk8ciMRjJUX/Wes028msEj4OGHvqZmL8AjH4klrmX9Ku2y+Kg==}
+    dependencies:
+      mongoose: 6.3.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@types/mongoose/5.11.97:
+    resolution: {integrity: sha512-cqwOVYT3qXyLiGw7ueU2kX9noE8DPGRY6z8eUxudhXY8NZ7DMKYAxyZkLSevGfhCX3dO/AoX5/SO9lAzfjon0Q==}
+    deprecated: Mongoose publishes its own types, so you do not need to install this package.
+    dependencies:
+      mongoose: 6.3.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@types/mysql/2.15.19:
     resolution: {integrity: sha512-wSRg2QZv14CWcZXkgdvHbbV2ACufNy5EgI8mBBxnJIptchv7DBy/h53VMa2jDhyo0C9MO4iowE6z9vF8Ja1DkQ==}
     dependencies:
@@ -2114,6 +2149,17 @@ packages:
 
   /@types/uuid/8.3.4:
     resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
+    dev: false
+
+  /@types/webidl-conversions/6.1.1:
+    resolution: {integrity: sha512-XAahCdThVuCFDQLT7R7Pk/vqeObFNL3YqRyFZg+AqAP/W1/w3xHaIxuW7WszQqTbIBOPRcItYJIou3i/mppu3Q==}
+    dev: false
+
+  /@types/whatwg-url/8.2.1:
+    resolution: {integrity: sha512-2YubE1sjj5ifxievI5Ge1sckb9k/Er66HyR2c+3+I6VDUUg1TLPdYYTEbQ+DjRkS4nTxMJhgWfSfMRD2sl2EYQ==}
+    dependencies:
+      '@types/node': 16.11.27
+      '@types/webidl-conversions': 6.1.1
     dev: false
 
   /@types/yargs-parser/21.0.0:
@@ -2976,6 +3022,11 @@ packages:
       mimic-response: 1.0.1
     dev: false
 
+  /clone/1.0.4:
+    resolution: {integrity: sha1-2jCcwmPfFZlMaIypAheco8fNfH4=}
+    engines: {node: '>=0.8'}
+    dev: false
+
   /co/4.6.0:
     resolution: {integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
@@ -3275,6 +3326,11 @@ packages:
 
   /delegates/1.0.0:
     resolution: {integrity: sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=}
+    dev: false
+
+  /denque/2.0.1:
+    resolution: {integrity: sha512-tfiWc6BQLXNLpNiR5iGd0Ocu3P3VpxfzFiqubLgMfhfOw9WyvgJBd46CClNn9k3qfbjvT//0cf7AlYRX/OslMQ==}
+    engines: {node: '>=0.10'}
     dev: false
 
   /depd/1.1.2:
@@ -4630,6 +4686,10 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
+  /ip/1.1.5:
+    resolution: {integrity: sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=}
+    dev: false
+
   /ipaddr.js/1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -5714,6 +5774,10 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /kareem/2.3.5:
+    resolution: {integrity: sha512-qxCyQtp3ioawkiRNQr/v8xw9KIviMSSNmy+63Wubj7KmMn3g7noRXIZB4vPCAP+ETi2SR8eH6CvmlKZuGpoHOg==}
+    dev: false
+
   /keyv/3.1.0:
     resolution: {integrity: sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA==}
     dependencies:
@@ -5962,6 +6026,11 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /memory-pager/1.5.0:
+    resolution: {integrity: sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==}
+    dev: false
+    optional: true
+
   /merge-descriptors/1.0.1:
     resolution: {integrity: sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=}
     dev: false
@@ -6058,6 +6127,69 @@ packages:
 
   /module-details-from-path/1.0.3:
     resolution: {integrity: sha1-EUyUlnPiqKNenTV4hSeqN7Z52is=}
+    dev: false
+
+  /mongodb-connection-string-url/2.5.2:
+    resolution: {integrity: sha512-tWDyIG8cQlI5k3skB6ywaEA5F9f5OntrKKsT/Lteub2zgwSUlhqEN2inGgBTm8bpYJf8QYBdA/5naz65XDpczA==}
+    dependencies:
+      '@types/whatwg-url': 8.2.1
+      whatwg-url: 11.0.0
+    dev: false
+
+  /mongodb/4.5.0:
+    resolution: {integrity: sha512-A2l8MjEpKojnhbCM0MK3+UOGUSGvTNNSv7AkP1fsT7tkambrkkqN/5F2y+PhzsV0Nbv58u04TETpkaSEdI2zKA==}
+    engines: {node: '>=12.9.0'}
+    dependencies:
+      bson: 4.6.3
+      denque: 2.0.1
+      mongodb-connection-string-url: 2.5.2
+      socks: 2.6.2
+    optionalDependencies:
+      saslprep: 1.0.3
+    dev: false
+
+  /mongoose-delete/0.5.4_mongoose@6.3.1:
+    resolution: {integrity: sha512-zKkcWFEwTneVG4Oiy+qJRJPFCiGlqOJToHeU3a3meJybWsHCnWxdHkGEkFWNY5cmYEv5av3WwByOhPlQ6I+FmQ==}
+    peerDependencies:
+      mongoose: 4.x || 5.x || 6.x
+    dependencies:
+      mongoose: 6.3.1
+    dev: false
+
+  /mongoose-id-validator/0.6.0:
+    resolution: {integrity: sha512-y3b3/PkmaiMKSbKB8tsEEGUjgCgKQGpD2Ood7jaVEob3V2HWgnmNKCgiSQUpEtQuDU0lUnLJQ5JE9PH1Bytziw==}
+    dependencies:
+      clone: 1.0.4
+      traverse: 0.6.6
+    dev: false
+
+  /mongoose/6.3.1:
+    resolution: {integrity: sha512-bknh/VzU/7mBudfE4/5N7NR2Bpjvuxl93iePvyCGLhjeHF6w+mCRmucYGQkG6wEbCmEUVmBQrcgr2b40krMo/Q==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      bson: 4.6.3
+      kareem: 2.3.5
+      mongodb: 4.5.0
+      mpath: 0.8.4
+      mquery: 4.0.2
+      ms: 2.1.3
+      sift: 16.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /mpath/0.8.4:
+    resolution: {integrity: sha512-DTxNZomBcTWlrMW76jy1wvV37X/cNNxPW1y2Jzd4DZkAaC5ZGsm8bfGfNOthcDuRJujXLqiuS6o3Tpy0JEoh7g==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
+  /mquery/4.0.2:
+    resolution: {integrity: sha512-oAVF0Nil1mT3rxty6Zln4YiD6x6QsUWYz927jZzjMxOK2aqmhEz5JQ7xmrKK7xRFA2dwV+YaOpKU/S+vfNqKxA==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /mri/1.2.0:
@@ -7114,6 +7246,14 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: false
 
+  /saslprep/1.0.3:
+    resolution: {integrity: sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==}
+    engines: {node: '>=6'}
+    dependencies:
+      sparse-bitfield: 3.0.3
+    dev: false
+    optional: true
+
   /saxes/5.0.1:
     resolution: {integrity: sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==}
     engines: {node: '>=10'}
@@ -7231,6 +7371,10 @@ packages:
       object-inspect: 1.12.0
     dev: false
 
+  /sift/16.0.0:
+    resolution: {integrity: sha512-ILTjdP2Mv9V1kIxWMXeMTIRbOBrqKc4JAXmFMnFq3fKeyQ2Qwa3Dw1ubcye3vR+Y6ofA0b9gNDr/y2t6eUeIzQ==}
+    dev: false
+
   /signal-exit/3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: false
@@ -7257,6 +7401,19 @@ packages:
       ansi-styles: 4.3.0
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
+    dev: false
+
+  /smart-buffer/4.2.0:
+    resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
+    engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
+    dev: false
+
+  /socks/2.6.2:
+    resolution: {integrity: sha512-zDZhHhZRY9PxRruRMR7kMhnf3I8hDs4S3f9RecfnGxvcBHQcKcIH/oUcEWffsfl1XxdYlA7nnlGbbTvPz9D8gA==}
+    engines: {node: '>= 10.13.0', npm: '>= 3.0.0'}
+    dependencies:
+      ip: 1.1.5
+      smart-buffer: 4.2.0
     dev: false
 
   /sonic-boom/1.4.1:
@@ -7297,6 +7454,13 @@ packages:
     resolution: {integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==}
     engines: {node: '>= 8'}
     dev: false
+
+  /sparse-bitfield/3.0.3:
+    resolution: {integrity: sha1-/0rm5oZWBWuks+eSqzM004JzyhE=}
+    dependencies:
+      memory-pager: 1.5.0
+    dev: false
+    optional: true
 
   /spdx-correct/3.1.1:
     resolution: {integrity: sha512-cOYcUWwhCuHCXi49RhFRCyJEK3iPj1Ziz9DpViV3tbZOwXD49QzIN3MpOLJNxh2qwq2lJJZaKMVw9qNi4jTC0w==}
@@ -7701,6 +7865,17 @@ packages:
       punycode: 2.1.1
     dev: false
 
+  /tr46/3.0.0:
+    resolution: {integrity: sha512-l7FvfAHlcmulp8kr+flpQZmVwtu7nfRV7NZujtN0OqES8EL4O4e0qqzL0DC5gAvx/ZC/9lk6rhcUwYvkBnBnYA==}
+    engines: {node: '>=12'}
+    dependencies:
+      punycode: 2.1.1
+    dev: false
+
+  /traverse/0.6.6:
+    resolution: {integrity: sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=}
+    dev: false
+
   /triple-beam/1.3.0:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
     dev: false
@@ -8079,6 +8254,11 @@ packages:
     engines: {node: '>=10.4'}
     dev: false
 
+  /webidl-conversions/7.0.0:
+    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
+    engines: {node: '>=12'}
+    dev: false
+
   /whatwg-encoding/1.0.5:
     resolution: {integrity: sha512-b5lim54JOPN9HtzvK9HFXvBma/rnfFeqsic0hSpjtDbVxR3dJKLc+KB4V6GgiGOvl7CY/KNh8rxSo9DKQrnUEw==}
     dependencies:
@@ -8087,6 +8267,14 @@ packages:
 
   /whatwg-mimetype/2.3.0:
     resolution: {integrity: sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g==}
+    dev: false
+
+  /whatwg-url/11.0.0:
+    resolution: {integrity: sha512-RKT8HExMpoYx4igMiVMY83lN6UeITKJlBQ+vR/8ZJ8OCdSiN3RwCq+9gH0+Xzj0+5IrM6i4j/6LuvzbZIQgEcQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      tr46: 3.0.0
+      webidl-conversions: 7.0.0
     dev: false
 
   /whatwg-url/5.0.0:
@@ -8341,7 +8529,7 @@ packages:
     dev: false
 
   file:projects/building-blocks.tgz:
-    resolution: {integrity: sha512-oXtxunhzTY5jOnHjR0qOc3+weEmvoUh2UaypJmnsM5ggTSpjKbIcNgM2k7/9XDNQvVN/9ChfeYV/OQyqwsE7cw==, tarball: file:projects/building-blocks.tgz}
+    resolution: {integrity: sha512-0LKrTIjcnV9suzfKgeVzgVZLKi8k1R71d0/OuateOmLlSqZKf2Lekao/ArRu4kPLIuSs4Dd2DflzjKKZ3mQ9ag==, tarball: file:projects/building-blocks.tgz}
     name: '@rush-temp/building-blocks'
     version: 0.0.0
     dependencies:
@@ -8362,6 +8550,7 @@ packages:
       '@types/express': 4.17.13
       '@types/jest': 27.0.3
       '@types/jsonwebtoken': 8.5.8
+      '@types/mongoose': 5.11.97
       '@types/node': 16.11.27
       '@types/node-schedule': 1.3.2
       '@types/uuid': 8.3.4
@@ -8381,6 +8570,7 @@ packages:
       husky: 7.0.4
       jest: 27.4.7
       jsonwebtoken: 8.5.1
+      mongoose: 6.3.1
       node-fetch: 2.6.7
       node-schedule: 2.1.0
       opentracing: 0.14.7
@@ -8617,7 +8807,7 @@ packages:
     dev: false
 
   file:projects/identity.tgz:
-    resolution: {integrity: sha512-3d6yLYHcSzzEJrridzGq3/iNA4Yl6ir8X5BH2LgP5ZwZVuZ04JENskePeIzjKbmIZhBChSy0Urs/JsemJz1EiA==, tarball: file:projects/identity.tgz}
+    resolution: {integrity: sha512-iiEtqxUb1HsYi0boUfA1MWm5YqS6KamKJ7N7jQ2y7fniwn71Dpjb4kFn7bi0QS67k7y1Xgr29d2wrJg+dE2eTg==, tarball: file:projects/identity.tgz}
     name: '@rush-temp/identity'
     version: 0.0.0
     dependencies:
@@ -8626,6 +8816,9 @@ packages:
       '@types/consul': 0.40.0
       '@types/express': 4.17.13
       '@types/jest': 27.0.3
+      '@types/mongoose': 5.11.97
+      '@types/mongoose-delete': 0.5.9
+      '@types/mongoose-id-validator': 0.6.3
       '@types/node': 16.11.27
       '@types/node-fetch': 2.6.1
       '@typescript-eslint/eslint-plugin': 5.6.0_208b89671cba43a6bd6c40399b91183c
@@ -8644,6 +8837,9 @@ packages:
       express: 4.17.3
       husky: 7.0.4
       jest: 27.4.7_ts-node@10.7.0
+      mongoose: 6.3.1
+      mongoose-delete: 0.5.4_mongoose@6.3.1
+      mongoose-id-validator: 0.6.0
       node-fetch: 2.6.7
       node-vault: 0.9.22
       nodemon: 2.0.15

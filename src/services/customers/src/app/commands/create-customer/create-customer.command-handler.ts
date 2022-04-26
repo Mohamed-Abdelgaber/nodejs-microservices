@@ -1,5 +1,5 @@
 import { Customer } from '@core/customer/customer';
-import { AppError, CommandHandler, MessageBus } from '@krater/building-blocks';
+import { KraterError, CommandHandler, MessageBus } from '@krater/building-blocks';
 import { CreateCustomerCommand } from './create-customer.command';
 import fetch from 'node-fetch';
 import { CustomerCreatedEvent } from '@core/events/customer-created.event';
@@ -43,7 +43,7 @@ export class CreateCustomerCommandHandler
     const { isFraudulent } = (await res.json()) as any;
 
     if (isFraudulent) {
-      throw new AppError(`Customer is fraudster.`);
+      throw new KraterError(`Customer is fraudster.`);
     }
 
     const customer = new Customer('1', payload.firstName, payload.lastName, payload.email);

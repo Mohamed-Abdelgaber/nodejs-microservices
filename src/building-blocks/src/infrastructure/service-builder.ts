@@ -24,6 +24,7 @@ import { MessageBus, RabbitMqMessageBus } from './message-bus';
 import { TracerBuilder } from './tracer';
 import * as opentracing from 'opentracing';
 import { ConsulServiceDiscovery, ServiceDiscovery } from './service-discovery';
+import mongoose from 'mongoose';
 
 interface CustomResolution {
   [key: string]: Resolver<any>;
@@ -126,6 +127,26 @@ export class ServiceBuilder {
         }))
         .singleton(),
     });
+
+    return this;
+  }
+
+  public useMongo(url: string) {
+    const logger = this.container.resolve<Logger>('logger');
+
+    mongoose.connect(
+      url,
+      {
+        autoCreate: true,
+      },
+      (error) => {
+        if (error) {
+          logger.error("Can't connect to mongo", error);
+        } else {
+          logger.info('Connected with mongo db.');
+        }
+      },
+    );
 
     return this;
   }

@@ -66,6 +66,7 @@
     "prometheus-api-metrics": "~3.2.1",
     "prom-client": "~14.0.1",
     "http-status": "~1.5.1",
-    "express": "~4.17.3"
+    "express": "~4.17.3",
+    "mongoose": "~6.3.1"
   }
 }

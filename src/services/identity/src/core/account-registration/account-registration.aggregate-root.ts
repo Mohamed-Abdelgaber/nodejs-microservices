@@ -52,4 +52,14 @@ export class AccountRegistration extends AggregateRoot<AccountRegistrationProps>
 
     return accountRegistration;
   }
+
+  public toJSON() {
+    return {
+      id: this.id.value,
+      email: this.props.email.toString(),
+      password: this.props.password.getHash(),
+      registeredAt: this.props.registeredAt,
+      emailConfirmedAt: this.props.emailConfirmedAt,
+    };
+  }
 }

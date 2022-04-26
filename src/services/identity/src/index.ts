@@ -5,6 +5,7 @@ import { PasswordHashProviderServiceImpl } from '@infrastructure/password-hash-p
 import { AccountEmailCheckerServiceImpl } from '@infrastructure/account-email-checker/account-email-checker.service';
 import { RegisterNewAccountCommandHandler } from '@app/commands/register-new-account/register-new-account.command-handler';
 import { IdentityController } from '@api/identity.controller';
+import { AccountRegistrationRepositoryImpl } from '@infrastructure/account-registration/account-registration.repository';
 
 config();
 
@@ -13,6 +14,7 @@ config();
     .setName('identity')
     .useRabbitMQ('amqp://localhost')
     .useConsul('http://localhost:8500')
+    .useMongo('mongodb://localhost:27017/identity')
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setCommandHandlers([asClass(RegisterNewAccountCommandHandler).singleton()])
     .setControllers([asClass(IdentityController).singleton()])
@@ -21,6 +23,7 @@ config();
     .setCustom({
       passwordHashProviderService: asClass(PasswordHashProviderServiceImpl).singleton(),
       accountEmailCheckerService: asClass(AccountEmailCheckerServiceImpl).singleton(),
+      accountRegistrationRepository: asClass(AccountRegistrationRepositoryImpl).singleton(),
     })
     .build();
 
