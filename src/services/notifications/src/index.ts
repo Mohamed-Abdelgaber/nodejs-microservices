@@ -1,4 +1,5 @@
 import { CustomerCreatedSubscriber } from '@app/subscribers/customer-created/customer-created.subscriber';
+import { NewAccountRegisteredSubscriber } from '@app/subscribers/new-account-registered/new-account-registered.subscriber';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
 import { config } from 'dotenv';
@@ -13,7 +14,10 @@ config();
     .setCommandHandlers([])
     .setControllers([])
     .setQueryHandlers([])
-    .setEventSubscribers([asClass(CustomerCreatedSubscriber).singleton()])
+    .setEventSubscribers([
+      asClass(CustomerCreatedSubscriber).singleton(),
+      asClass(NewAccountRegisteredSubscriber).singleton(),
+    ])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .build();
 

@@ -77,3 +77,33 @@ services:
     restart: unless-stopped
     ports:
       - 3000:3000
+
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    networks:
+      - krater
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    networks:
+      - krater
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    ports:
+      - $MAILER_PORT:1025
+      - 8025:8025
+
+networks:
+  krater:
