@@ -48,7 +48,13 @@ export class AccountRegistration extends AggregateRoot<AccountRegistrationProps>
       status: AccountStatus.WaitingForEmailConfirmation,
     });
 
-    accountRegistration.addDomainEvent(new NewAccountRegisteredEvent({ ...contactDetails, email }));
+    accountRegistration.addDomainEvent(
+      new NewAccountRegisteredEvent({
+        ...contactDetails,
+        accountId: accountRegistration.id.value,
+        email,
+      }),
+    );
 
     return accountRegistration;
   }

@@ -2,9 +2,12 @@ import { Command } from '@krater/building-blocks';
 import { SpanContext } from 'opentracing';
 
 export interface CreateCustomerCommandPayload {
+  accountId: string;
   firstName: string;
   lastName: string;
-  email: string;
+  zipCode: string;
+  phoneNumber: string;
+  phoneAreaCode: string;
   context: SpanContext;
 }
 

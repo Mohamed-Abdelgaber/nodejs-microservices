@@ -1,31 +1,21 @@
-import { Customer } from '@core/customer/customer';
-import { KraterError, CommandHandler, MessageBus } from '@krater/building-blocks';
+import { KraterError, CommandHandler } from '@krater/building-blocks';
 import { CreateCustomerCommand } from './create-customer.command';
 import fetch from 'node-fetch';
-import { CustomerCreatedEvent } from '@core/events/customer-created.event';
-import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
-import { SayHelloEvent } from '@core/events/say-hello.event';
-
-export interface CreateCustomerCommandResult {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+import { FORMAT_HTTP_HEADERS, Tracer } from 'opentracing';
+import { Customer } from '@core/customer/customer.aggregate-root';
+import { CustomerRepository } from '@core/customer/customer.repository';
 
 interface Dependencies {
-  messageBus: MessageBus;
   tracer: Tracer;
+  customerRepository: CustomerRepository;
 }
 
-export class CreateCustomerCommandHandler
-  implements CommandHandler<CreateCustomerCommand, CreateCustomerCommandResult>
-{
+export class CreateCustomerCommandHandler implements CommandHandler<CreateCustomerCommand> {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle({ payload }: CreateCustomerCommand): Promise<CreateCustomerCommandResult> {
+  public async handle({ payload: { context, ...payload } }: CreateCustomerCommand): Promise<void> {
     const span = this.dependencies.tracer.startSpan('Create Customer Command', {
-      childOf: payload.context,
+      childOf: context,
     });
 
     span.addTags({
@@ -46,29 +36,10 @@ export class CreateCustomerCommandHandler
       throw new KraterError(`Customer is fraudster.`);
     }
 
-    const customer = new Customer('1', payload.firstName, payload.lastName, payload.email);
+    const customer = Customer.createNew(payload);
 
-    await this.dependencies.messageBus.sendEvent(
-      new CustomerCreatedEvent({
-        email: payload.email,
-        userId: '1',
-      }),
-      {
-        spanContext: headers as SpanContext,
-      },
-    );
-
-    await this.dependencies.messageBus.sendEvent(
-      new SayHelloEvent({
-        message: 'Howdy from Customers MS',
-      }),
-      {
-        spanContext: headers as SpanContext,
-      },
-    );
+    await this.dependencies.customerRepository.insert(customer);
 
     span.finish();
-
-    return customer.toJSON();
   }
 }

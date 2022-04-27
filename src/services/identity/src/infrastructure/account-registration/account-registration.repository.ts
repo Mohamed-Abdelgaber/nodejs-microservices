@@ -4,8 +4,6 @@ import { AccountModel } from './account.model';
 
 export class AccountRegistrationRepositoryImpl implements AccountRegistrationRepository {
   public async insert(accountRegistration: AccountRegistration): Promise<void> {
-    const accountData = accountRegistration.toJSON();
-
-    await AccountModel.create(accountData);
+    await AccountModel.create(accountRegistration.toJSON());
   }
 }

@@ -9,6 +9,7 @@ export const AccountSchema = new Schema(
       type: String,
       required: true,
       maxlength: 200,
+      unique: true,
     },
     email: {
       type: String,
@@ -46,7 +47,7 @@ export const AccountSchema = new Schema(
   },
 );
 
-AccountSchema.index({ email: 1, status: 1 });
+AccountSchema.index({ email: 1, status: 1, id: 1 });
 
 AccountSchema.plugin(MongooseDelete, { deletedBy: true, deletedAt: true });
 AccountSchema.plugin(MongooseIdValidator);
