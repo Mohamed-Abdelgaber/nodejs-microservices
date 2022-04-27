@@ -27,7 +27,10 @@
     "opentracing": "~0.14.7",
     "@opentelemetry/api": "~1.0.4",
     "prometheus-api-metrics": "~3.2.1",
-    "prom-client": "~14.0.1"
+    "prom-client": "~14.0.1",
+    "mongoose": "~6.3.1",
+    "mongoose-delete": "~0.5.4",
+    "mongoose-id-validator": "~0.6.0"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",
@@ -49,7 +52,9 @@
     "nodemon": "~2.0.15",
     "ts-node": "~10.7.0",
     "@types/node-fetch": "~2.6.1",
-    "@types/consul": "~0.40.0"
+    "@types/consul": "~0.40.0",
+    "@types/mongoose-delete": "~0.5.9",
+    "@types/mongoose-id-validator": "~0.6.3"
   },
   "keywords": [],
   "author": "",

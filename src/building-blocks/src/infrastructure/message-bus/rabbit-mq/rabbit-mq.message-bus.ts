@@ -26,7 +26,7 @@ export class RabbitMqMessageBus implements MessageBus {
 
     this.channel = await connection.createChannel();
 
-    await this.channel.assertExchange(this.dependencies.serviceName, 'headers', {
+    await this.channel.assertExchange(this.dependencies.serviceName, 'topic', {
       durable: true,
     });
   }
@@ -34,15 +34,8 @@ export class RabbitMqMessageBus implements MessageBus {
   public async sendEvent(event: DomainEvent<{}>, context: MessageContext): Promise<void> {
     this.channel.publish(
       this.dependencies.serviceName,
-      '',
+      `${event.service}.${event.constructor.name}`,
       Buffer.from(JSON.stringify({ payload: event.payload, context })),
-      {
-        headers: {
-          service: this.dependencies.serviceName,
-          event: event.constructor.name,
-          type: MessageType.Event,
-        },
-      },
     );
   }
 
@@ -51,20 +44,15 @@ export class RabbitMqMessageBus implements MessageBus {
     service: string,
     callback: (EventType: DomainEvent<unknown>, context: MessageContext) => Promise<void>,
   ): Promise<void> {
-    await this.channel.assertQueue(`${service}.${event}`);
-
-    await this.channel.assertExchange(service, 'headers', {
+    await this.channel.assertExchange(service, 'topic', {
       durable: true,
     });
 
-    await this.channel.bindQueue('', service, '', {
-      service,
-      'x-match': 'all',
-      type: MessageType.Event,
-      event: event,
-    });
+    await this.channel.assertQueue('', { exclusive: true });
 
-    await this.channel.consume(`${service}.${event}`, async (message) => {
+    await this.channel.bindQueue('', service, `${service}.${event}`);
+
+    await this.channel.consume('', async (message) => {
       const { payload, context } = JSON.parse(message.content.toString());
 
       await callback(new DomainEvent(service, payload), context);
