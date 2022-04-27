@@ -102,7 +102,7 @@ services:
     container_name: mailhog
     image: mailhog/mailhog
     ports:
-      - $MAILER_PORT:1025
+      - 1025:1025
       - 8025:8025
 
 networks:

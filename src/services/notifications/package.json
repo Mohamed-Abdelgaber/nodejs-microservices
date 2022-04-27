@@ -24,7 +24,9 @@
     "node-fetch": "2",
     "consul": "~0.40.0",
     "opentracing": "~0.14.7",
-    "prometheus-api-metrics": "~3.2.1"
+    "prometheus-api-metrics": "~3.2.1",
+    "handlebars": "~4.7.7",
+    "nodemailer": "~6.7.3"
   },
   "devDependencies": {
     "@types/node": "~16.11.12",
@@ -46,7 +48,8 @@
     "nodemon": "~2.0.15",
     "ts-node": "~10.7.0",
     "@types/node-fetch": "~2.6.1",
-    "@types/consul": "~0.40.0"
+    "@types/consul": "~0.40.0",
+    "@types/nodemailer": "~6.4.4"
   },
   "keywords": [],
   "author": "",
