@@ -2,6 +2,7 @@ import { AccountEmailCheckerService } from '@core/account-email/account-email-ch
 import { PasswordHashProviderService } from '@core/account-password/password-hash-provider.service';
 import { AccountRegistration } from '@core/account-registration/account-registration.aggregate-root';
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
+import { EmailVerificationCodeProviderService } from '@core/email-verification-code/email-verification-code-provider.service';
 import { CommandHandler, MessageBus } from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { RegisterNewAccountCommand } from './register-new-account.command';
@@ -12,6 +13,7 @@ interface Dependencies {
   messageBus: MessageBus;
   tracer: Tracer;
   accountRegistrationRepository: AccountRegistrationRepository;
+  emailVerificationCodeProviderService: EmailVerificationCodeProviderService;
 }
 
 export class RegisterNewAccountCommandHandler implements CommandHandler<RegisterNewAccountCommand> {
@@ -35,12 +37,17 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
 
     this.dependencies.tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
 
-    const { accountEmailCheckerService, passwordHashProviderService, messageBus } =
-      this.dependencies;
+    const {
+      accountEmailCheckerService,
+      passwordHashProviderService,
+      messageBus,
+      emailVerificationCodeProviderService,
+    } = this.dependencies;
 
     const accountRegistration = await AccountRegistration.registerNew(payload, {
       accountEmailCheckerService,
       passwordHashProviderService,
+      emailVerificationCodeProviderService,
     });
 
     const eventPromises = accountRegistration.getDomainEvents().map((event) =>
