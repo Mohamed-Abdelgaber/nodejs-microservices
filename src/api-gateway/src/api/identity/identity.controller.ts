@@ -3,6 +3,7 @@ import { RequestHandler, Router } from 'express';
 
 interface Dependencies {
   signUpAction: RequestHandler[];
+  verifyEmailAddressAction: RequestHandler[];
 }
 
 export class IdentityController implements Controller {
@@ -14,6 +15,8 @@ export class IdentityController implements Controller {
     const router = Router();
 
     router.post('/sign-up', this.dependencies.signUpAction);
+
+    router.patch('/verify-email', this.dependencies.verifyEmailAddressAction);
 
     return router;
   }
