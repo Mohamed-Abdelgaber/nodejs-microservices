@@ -1,5 +1,5 @@
 import { AccountStatusValue } from '@core/account-status/account-status.value-object';
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import MongooseDelete from 'mongoose-delete';
 import MongooseIdValidator from 'mongoose-id-validator';
 
@@ -41,6 +41,12 @@ export const AccountSchema = new Schema(
       required: false,
       default: null,
     },
+    emailVerificationCodes: [
+      {
+        type: Types.ObjectId,
+        ref: 'emailVerificationCode',
+      },
+    ],
   },
   {
     timestamps: true,

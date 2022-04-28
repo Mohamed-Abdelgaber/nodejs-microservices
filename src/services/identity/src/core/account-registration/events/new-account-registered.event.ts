@@ -8,6 +8,7 @@ interface Payload {
   zipCode: string;
   phoneNumber: string;
   phoneAreaCode: string;
+  verificationCode: string;
 }
 
 export class NewAccountRegisteredEvent extends DomainEvent<Payload> {
