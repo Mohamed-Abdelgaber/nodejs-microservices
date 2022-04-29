@@ -157,6 +157,7 @@ export class AccountRegistration extends AggregateRoot<AccountRegistrationProps>
       password: this.props.password.getHash(),
       registeredAt: this.props.registeredAt,
       emailConfirmedAt: this.props.emailConfirmedAt,
+      status: this.props.status.getValue(),
     };
   }
 }

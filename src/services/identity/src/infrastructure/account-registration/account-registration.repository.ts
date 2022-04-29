@@ -27,4 +27,34 @@ export class AccountRegistrationRepositoryImpl implements AccountRegistrationRep
 
     return AccountRegistration.fromPersistence(result);
   }
+
+  public async update(accountRegistration: AccountRegistration): Promise<void> {
+    const { id, ...data } = accountRegistration.toJSON();
+
+    const rawEmailVerificationCodes = accountRegistration
+      .getEmailVerificationCodes()
+      .map((code) => code.toJSON());
+
+    await AccountModel.findOneAndUpdate(
+      {
+        id,
+      },
+      {
+        $set: data,
+      },
+    );
+
+    const verificationCodePromises = rawEmailVerificationCodes.map(({ id: codeId, ...code }) =>
+      EmailVerificationCodeModel.updateOne(
+        {
+          id: codeId,
+        },
+        {
+          $set: code,
+        },
+      ),
+    );
+
+    await Promise.all(verificationCodePromises);
+  }
 }

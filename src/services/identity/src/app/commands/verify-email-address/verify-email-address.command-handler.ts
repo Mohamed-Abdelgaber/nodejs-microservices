@@ -1,11 +1,12 @@
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
-import { CommandHandler, UnauthorizedError } from '@krater/building-blocks';
-import { Tracer } from 'opentracing';
+import { CommandHandler, MessageBus, UnauthorizedError } from '@krater/building-blocks';
+import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { VerifyEmailAddressCommand } from './verify-email-address.command';
 
 interface Dependencies {
   tracer: Tracer;
   accountRegistrationRepository: AccountRegistrationRepository;
+  messageBus: MessageBus;
 }
 
 export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEmailAddressCommand> {
@@ -14,7 +15,7 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
   public async handle({
     payload: { context, email, verificationCode },
   }: VerifyEmailAddressCommand): Promise<void> {
-    const { accountRegistrationRepository, tracer } = this.dependencies;
+    const { accountRegistrationRepository, tracer, messageBus } = this.dependencies;
 
     const span = tracer.startSpan('[Command] Verify Email address for account', {
       childOf: context,
@@ -24,6 +25,10 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
       'x-type': 'command',
     });
 
+    const headers = {};
+
+    this.dependencies.tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
+
     const accountRegistration = await accountRegistrationRepository.findByEmail(email);
 
     if (!email) {
@@ -31,6 +36,16 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
     }
 
     accountRegistration.confirmEmail(verificationCode);
+
+    await accountRegistrationRepository.update(accountRegistration);
+
+    const eventPromises = accountRegistration.getDomainEvents().map((event) =>
+      messageBus.sendEvent(event, {
+        spanContext: headers as SpanContext,
+      }),
+    );
+
+    await Promise.all(eventPromises);
 
     span.finish();
   }

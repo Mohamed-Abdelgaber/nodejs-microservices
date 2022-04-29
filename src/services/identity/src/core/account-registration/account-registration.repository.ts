@@ -4,4 +4,6 @@ export interface AccountRegistrationRepository {
   insert(accountRegistration: AccountRegistration): Promise<void>;
 
   findByEmail(email: string): Promise<AccountRegistration | null>;
+
+  update(accountRegistration: AccountRegistration): Promise<void>;
 }
