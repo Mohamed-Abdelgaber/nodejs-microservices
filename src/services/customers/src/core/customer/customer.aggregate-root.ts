@@ -1,4 +1,5 @@
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
+import { CustomerCantBeActivatedAlreadyRule } from './rules/customer-cant-be-activated-already.rule';
 
 interface CustomerProps {
   firstName: string;
@@ -18,6 +19,16 @@ interface CreateNewCustomerPayload {
   phoneAreaCode: string;
 }
 
+interface PersistedCustomer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  zipCode: string;
+  phoneNumber: string;
+  phoneAreaCode: string;
+  activatedAt: Date | null;
+}
+
 export class Customer extends AggregateRoot<CustomerProps> {
   private constructor(props: CustomerProps, id?: UniqueEntityID) {
     super(props, id);
@@ -31,6 +42,22 @@ export class Customer extends AggregateRoot<CustomerProps> {
       },
       new UniqueEntityID(accountId),
     );
+  }
+
+  public static fromPersistence({ id, activatedAt, ...payload }: PersistedCustomer) {
+    return new Customer(
+      {
+        ...payload,
+        activatedAt: activatedAt ?? null,
+      },
+      new UniqueEntityID(id),
+    );
+  }
+
+  public activate(activationDate: Date) {
+    Customer.checkRule(new CustomerCantBeActivatedAlreadyRule(this.props.activatedAt));
+
+    this.props.activatedAt = activationDate;
   }
 
   public toJSON() {

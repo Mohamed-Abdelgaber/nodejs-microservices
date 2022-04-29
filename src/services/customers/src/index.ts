@@ -1,4 +1,5 @@
 import { CreateCustomerCommandHandler } from '@app/commands/create-customer/create-customer.command-handler';
+import { AccountEmailConfirmedSubscriber } from '@app/subscribers/account-email-confirmed/account-email-confirmed.subscriber';
 import { NewAccountRegisteredSubscriber } from '@app/subscribers/new-account-registered/new-account-registered.subscriber';
 import { CustomerRepositoryImpl } from '@infrastructure/customer/customer.repository';
 import { ServiceBuilder } from '@krater/building-blocks';
@@ -15,7 +16,10 @@ config();
     .setCommandHandlers([asClass(CreateCustomerCommandHandler).singleton()])
     .setControllers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
-    .setEventSubscribers([asClass(NewAccountRegisteredSubscriber).singleton()])
+    .setEventSubscribers([
+      asClass(NewAccountRegisteredSubscriber).singleton(),
+      asClass(AccountEmailConfirmedSubscriber).singleton(),
+    ])
     .setQueryHandlers([])
     .setCustom({
       customerRepository: asClass(CustomerRepositoryImpl).singleton(),
