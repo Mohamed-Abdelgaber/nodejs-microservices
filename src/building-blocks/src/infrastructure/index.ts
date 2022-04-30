@@ -13,3 +13,5 @@ export * from './message-bus';
 export * from './tracer';
 
 export * from './service-builder';
+
+export * from './service-client';

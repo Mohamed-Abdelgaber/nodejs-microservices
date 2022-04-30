@@ -25,6 +25,8 @@ import { TracerBuilder } from './tracer';
 import * as opentracing from 'opentracing';
 import { ConsulServiceDiscovery, ServiceDiscovery } from './service-discovery';
 import mongoose from 'mongoose';
+import { RedisServiceClient } from './service-client/redis.service-client';
+import { ServiceClient } from './service-client/service-client';
 
 interface CustomResolution {
   [key: string]: Resolver<any>;
@@ -40,6 +42,7 @@ export class ServiceBuilder {
 
     this.container.register({
       logger: asValue(logger(name)),
+      serviceClient: asClass(RedisServiceClient).singleton(),
     });
 
     const tracerBuilder = new TracerBuilder(name).build();
@@ -161,6 +164,9 @@ export class ServiceBuilder {
     return {
       bootstrap: async () => {
         const logger = this.container.resolve<Logger>('logger');
+        const serviceClient = this.container.resolve<ServiceClient>('serviceClient');
+
+        await serviceClient.bootstrap();
 
         logger.info('Loading service dependencies...');
 
@@ -186,6 +192,9 @@ export class ServiceBuilder {
 
         return app;
       },
+      getContainer: () => {
+        return this.container;
+      },
     };
   }
 
@@ -203,7 +212,7 @@ export class ServiceBuilder {
         health: {
           endpoint: '/health',
           intervalSeconds: 5,
-          timeoutSeconds: 5,
+          timeoutSeconds: 60,
         },
       });
 
