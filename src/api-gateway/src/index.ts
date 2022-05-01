@@ -1,4 +1,3 @@
-import { CustomersController } from '@api/customers/customers.controller';
 import { FraudController } from '@api/fraud/fraud.controller';
 import { IdentityController } from '@api/identity/identity.controller';
 import { openApiDocs } from '@infrastructure/open-api/open-api.docs';
@@ -17,11 +16,7 @@ config();
     .setServiceControllers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
-    .setControllers([
-      asClass(CustomersController).singleton(),
-      asClass(FraudController).singleton(),
-      asClass(IdentityController).singleton(),
-    ])
+    .setControllers([asClass(FraudController).singleton(), asClass(IdentityController).singleton()])
     .setQueryHandlers([])
     .useConsul('http://localhost:8500')
     .build();
