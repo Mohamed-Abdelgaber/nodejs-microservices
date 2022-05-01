@@ -17,7 +17,7 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
   }: VerifyEmailAddressCommand): Promise<void> {
     const { accountRegistrationRepository, tracer, messageBus } = this.dependencies;
 
-    const span = tracer.startSpan('[Command] Verify Email address for account', {
+    const span = tracer.startSpan('[Command Handler] Verify Email address for account', {
       childOf: context,
     });
 

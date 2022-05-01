@@ -1,5 +1,4 @@
 import { ServiceClient } from '@krater/building-blocks';
-import { celebrate, Joi, Segments } from 'celebrate';
 import { RequestHandler } from 'express';
 
 interface Dependencies {
@@ -7,35 +6,23 @@ interface Dependencies {
   serviceClient: ServiceClient;
 }
 
-const verifyEmailAddressActionValidation = celebrate(
-  {
-    [Segments.BODY]: Joi.object().keys({
-      email: Joi.string().trim().email().required(),
-      verificationCode: Joi.string().trim().length(6).required(),
-    }),
-  },
-  {
-    abortEarly: false,
-  },
-);
-
 /**
  * @openapi
  *
- * /api/v1/identity/verify-email:
+ * /api/v1/identity/resend-email-verification-code:
  *   post:
  *     tags:
  *        - Identity
  *     summary:
- *       This endpoint allows to verify user email address.
+ *       This endpoint allows to resend email verification code.
  *     requestBody:
  *       content:
  *         application/json:
  *          schema:
- *            $ref: '#components/schemas/VerifyEmailAddress'
+ *            $ref: '#components/schemas/ResendEmailVerificationCode'
  *     responses:
  *       204:
- *        description: Email address verified successfully.
+ *        description: Email verification code sent successfully.
  *       400:
  *        description: Business Rule Error
  *       401:
@@ -45,15 +32,14 @@ const verifyEmailAddressActionValidation = celebrate(
  *       500:
  *         description: Internal Server Error
  */
-const verifyEmailAddressAction = ({
-  tracingMiddleware,
+const resendEmailVerificationCodeAction = ({
   serviceClient,
+  tracingMiddleware,
 }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
-  verifyEmailAddressActionValidation,
   (req, res, next) =>
     serviceClient
-      .send('identity.verify_email_address', {
+      .send('identity.resend_email_verification_code', {
         ...req.body,
         context: req.headers,
       })
@@ -61,4 +47,4 @@ const verifyEmailAddressAction = ({
       .catch(next),
 ];
 
-export default verifyEmailAddressAction;
+export default resendEmailVerificationCodeAction;

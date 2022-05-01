@@ -1,11 +1,28 @@
 import { ServiceClient } from '@krater/building-blocks';
+import { celebrate, Joi, Segments } from 'celebrate';
 import { RequestHandler } from 'express';
-// import proxy from 'express-http-proxy';
 
 interface Dependencies {
   tracingMiddleware: RequestHandler;
   serviceClient: ServiceClient;
 }
+
+const registerNewAccountActionValidation = celebrate(
+  {
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().trim().required(),
+      firstName: Joi.string().trim().min(3).required(),
+      lastName: Joi.string().trim().min(3).required(),
+      zipCode: Joi.string().trim().min(3).required(),
+      phoneNumber: Joi.string().trim().min(3).required(),
+      phoneAreaCode: Joi.string().trim().min(2).required(),
+    }),
+  },
+  {
+    abortEarly: false,
+  },
+);
 
 /**
  * @openapi
@@ -35,6 +52,7 @@ interface Dependencies {
  */
 const signUpAction = ({ tracingMiddleware, serviceClient }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
+  registerNewAccountActionValidation,
   async (req, res, next) =>
     serviceClient
       .send('identity.sign_up', { ...req.body, context: req.headers })

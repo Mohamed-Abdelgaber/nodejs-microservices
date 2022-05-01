@@ -1,3 +1,4 @@
+import { EmailVerificationCodeHasBeenSentAgainSubscriber } from '@app/subscribers/email-verification-code-has-been-sent/email-verification-code-has-been-sent.subscriber';
 import { NewAccountRegisteredSubscriber } from '@app/subscribers/new-account-registered/new-account-registered.subscriber';
 import { MailhogMailerService } from '@infrastructure/mailer/mailhog-mailer.service';
 import { ServiceBuilder } from '@krater/building-blocks';
@@ -15,7 +16,10 @@ config();
     .setServiceControllers([])
     .setControllers([])
     .setQueryHandlers([])
-    .setEventSubscribers([asClass(NewAccountRegisteredSubscriber).singleton()])
+    .setEventSubscribers([
+      asClass(NewAccountRegisteredSubscriber).singleton(),
+      asClass(EmailVerificationCodeHasBeenSentAgainSubscriber).singleton(),
+    ])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setCustom({
       mailerService: asClass(MailhogMailerService).singleton(),

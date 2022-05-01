@@ -10,6 +10,7 @@ import {
 } from '@core/email-verification-code/email-verification-code.entity';
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
 import { AccountEmailConfirmedEvent } from './events/account-email-confirmed.event';
+import { EmailVerificationCodeHasBeenSentAgainEvent } from './events/email-verification-code-has-been-sent-again.event';
 import { NewAccountRegisteredEvent } from './events/new-account-registered.event';
 import { EmailMustNotBeConfirmedAlreadyRule } from './rules/email-must-not-be-confirmed-already.rule';
 import { EmailVerificationCodeMustExistRule } from './rules/email-verification-code-must-exist.rule';
@@ -142,6 +143,30 @@ export class AccountRegistration extends AggregateRoot<AccountRegistrationProps>
       new AccountEmailConfirmedEvent({
         accountId: this.id.value,
         activatedAt: now.toISOString(),
+      }),
+    );
+  }
+
+  public resendEmailVerificationCode(
+    emailVerificationCodeProviderService: EmailVerificationCodeProviderService,
+  ) {
+    const newEmailVerificationCode = EmailVerificationCode.createNew({
+      emailVerificationCodeProviderService,
+    });
+
+    this.props.emailVerificationCodes = this.props.emailVerificationCodes.map((code) => {
+      code.archive();
+
+      return code;
+    });
+
+    this.props.emailVerificationCodes.push(newEmailVerificationCode);
+
+    this.addDomainEvent(
+      new EmailVerificationCodeHasBeenSentAgainEvent({
+        accountId: this.id.value,
+        email: this.props.email.toString(),
+        verificationCode: newEmailVerificationCode.getCode(),
       }),
     );
   }

@@ -4,6 +4,7 @@ import { RequestHandler, Router } from 'express';
 interface Dependencies {
   signUpAction: RequestHandler[];
   verifyEmailAddressAction: RequestHandler[];
+  resendEmailVerificationCodeAction: RequestHandler[];
 }
 
 export class IdentityController implements Controller {
@@ -17,6 +18,11 @@ export class IdentityController implements Controller {
     router.post('/sign-up', this.dependencies.signUpAction);
 
     router.patch('/verify-email', this.dependencies.verifyEmailAddressAction);
+
+    router.post(
+      '/resend-email-verification-code',
+      this.dependencies.resendEmailVerificationCodeAction,
+    );
 
     return router;
   }

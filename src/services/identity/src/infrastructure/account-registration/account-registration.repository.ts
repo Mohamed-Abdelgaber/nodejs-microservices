@@ -1,5 +1,6 @@
 import { AccountRegistration } from '@core/account-registration/account-registration.aggregate-root';
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
+import { EmailVerificationCodeStatusValue } from '@core/email-verification-code-status/email-verification-code-status.value-object';
 import { EmailVerificationCodeModel } from '@infrastructure/email-verification-code/email-verification-code.model';
 import { AccountModel } from './account.model';
 
@@ -43,6 +44,23 @@ export class AccountRegistrationRepositoryImpl implements AccountRegistrationRep
         $set: data,
       },
     );
+
+    const newEmail = rawEmailVerificationCodes.find(
+      (code) => code.status === EmailVerificationCodeStatusValue.Active,
+    );
+
+    if (newEmail) {
+      const { _id } = await EmailVerificationCodeModel.create(newEmail);
+
+      await AccountModel.updateOne(
+        { id },
+        {
+          $addToSet: {
+            emailVerificationCodes: _id,
+          },
+        },
+      );
+    }
 
     const verificationCodePromises = rawEmailVerificationCodes.map(({ id: codeId, ...code }) =>
       EmailVerificationCodeModel.updateOne(

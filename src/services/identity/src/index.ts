@@ -8,6 +8,7 @@ import { AccountRegistrationRepositoryImpl } from '@infrastructure/account-regis
 import { EmailVerificationCodeProviderServiceImpl } from '@infrastructure/email-verification-code/email-verification-code-provider.service';
 import { VerifyEmailAddressCommandHandler } from '@app/commands/verify-email-address/verify-email-address.command-handler';
 import { IdentityServiceController } from '@api/identity.service-controller';
+import { ResendEmailVerificationCodeCommandHandler } from '@app/commands/resend-email-verification-code/resend-email-verification-code.command-handler';
 
 config();
 
@@ -21,6 +22,7 @@ config();
     .setCommandHandlers([
       asClass(RegisterNewAccountCommandHandler).singleton(),
       asClass(VerifyEmailAddressCommandHandler).singleton(),
+      asClass(ResendEmailVerificationCodeCommandHandler).singleton(),
     ])
     .setServiceControllers([asClass(IdentityServiceController).singleton()])
     .setControllers([])
