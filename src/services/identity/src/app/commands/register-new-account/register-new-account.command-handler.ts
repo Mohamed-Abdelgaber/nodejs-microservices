@@ -3,7 +3,7 @@ import { PasswordHashProviderService } from '@core/account-password/password-has
 import { AccountRegistration } from '@core/account-registration/account-registration.aggregate-root';
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
 import { EmailVerificationCodeProviderService } from '@core/email-verification-code/email-verification-code-provider.service';
-import { CommandHandler, MessageBus } from '@krater/building-blocks';
+import { CommandHandler, MessageBus, ServiceClient } from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { RegisterNewAccountCommand } from './register-new-account.command';
 
@@ -14,6 +14,7 @@ interface Dependencies {
   tracer: Tracer;
   accountRegistrationRepository: AccountRegistrationRepository;
   emailVerificationCodeProviderService: EmailVerificationCodeProviderService;
+  serviceClient: ServiceClient;
 }
 
 export class RegisterNewAccountCommandHandler implements CommandHandler<RegisterNewAccountCommand> {

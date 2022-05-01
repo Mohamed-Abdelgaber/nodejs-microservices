@@ -16,6 +16,7 @@ import {
   InMemoryCommandBus,
   InMemoryQueryBus,
   QueryHandler,
+  ServiceController,
   tracingMiddleware,
 } from '..';
 import { registerAsArray } from './container';
@@ -62,6 +63,14 @@ export class ServiceBuilder {
   public setControllers(controllers: Resolver<Controller>[]) {
     this.container.register({
       controllers: registerAsArray(controllers),
+    });
+
+    return this;
+  }
+
+  public setServiceControllers(controllers: Resolver<ServiceController>[]) {
+    this.container.register({
+      serviceControllers: registerAsArray(controllers),
     });
 
     return this;
@@ -185,6 +194,13 @@ export class ServiceBuilder {
         this.container.register({
           app: asValue(server.getApp()),
         });
+
+        const serviceControllers =
+          this.container.resolve<ServiceController[]>('serviceControllers') ?? [];
+
+        const controllerSetupPromises = serviceControllers.map((controller) => controller.setup());
+
+        await Promise.all(controllerSetupPromises);
       },
       listen: (port: number) => this.listen(port),
       getApp: () => {
@@ -227,9 +243,9 @@ export class ServiceBuilder {
     const messageBus = this.container.resolve<MessageBus>('messageBus');
 
     const promises = subscribers.map((subscriber) => {
-      const [service, event] = subscriber.type.split('.');
+      const [service, ...rest] = subscriber.type.split('.');
 
-      return messageBus.subscribeToEvent(event, service, (event, ctx) =>
+      return messageBus.subscribeToEvent(rest.join('.'), service, (event, ctx) =>
         subscriber.handle(event, ctx),
       );
     });

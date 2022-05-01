@@ -14,6 +14,7 @@ config();
     .useRabbitMQ('amqp://localhost')
     .setName('api-gateway')
     .setCommandHandlers([])
+    .setServiceControllers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
     .setControllers([

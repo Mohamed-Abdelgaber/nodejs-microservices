@@ -15,6 +15,7 @@ config();
     .setQueryHandlers([])
     .setControllers([asClass(FraudController)])
     .setEventSubscribers([])
+    .setServiceControllers([])
     .setCustom({
       fraudCheckService: asClass(FraudCheckServiceImpl).singleton(),
     })

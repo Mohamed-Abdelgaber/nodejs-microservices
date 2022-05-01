@@ -34,7 +34,7 @@ export class RabbitMqMessageBus implements MessageBus {
   public async sendEvent(event: DomainEvent<{}>, context: MessageContext): Promise<void> {
     this.channel.publish(
       this.dependencies.serviceName,
-      `${event.service}.${event.constructor.name}`,
+      `${event.service}.${event.constructor.name}.${event.service}`,
       Buffer.from(JSON.stringify({ payload: event.payload, context })),
     );
   }
@@ -48,11 +48,15 @@ export class RabbitMqMessageBus implements MessageBus {
       durable: true,
     });
 
-    await this.channel.assertQueue('', { exclusive: true });
+    await this.channel.assertQueue(`${service}.${event}`, { exclusive: true });
 
-    await this.channel.bindQueue('', service, `${service}.${event}`);
+    await this.channel.bindQueue(
+      `${service}.${event}`,
+      service,
+      `${service}.${event.split('.')[0]}.*`,
+    );
 
-    await this.channel.consume('', async (message) => {
+    await this.channel.consume(`${service}.${event}`, async (message) => {
       const { payload, context } = JSON.parse(message.content.toString());
 
       await callback(new DomainEvent(service, payload), context);

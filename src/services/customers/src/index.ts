@@ -16,6 +16,7 @@ config();
     .setCommandHandlers([asClass(CreateCustomerCommandHandler).singleton()])
     .setControllers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
+    .setServiceControllers([])
     .setEventSubscribers([
       asClass(NewAccountRegisteredSubscriber).singleton(),
       asClass(AccountEmailConfirmedSubscriber).singleton(),

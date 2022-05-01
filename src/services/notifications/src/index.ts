@@ -12,6 +12,7 @@ config();
     .useRabbitMQ('amqp://localhost')
     .useConsul('http://localhost:8500')
     .setCommandHandlers([])
+    .setServiceControllers([])
     .setControllers([])
     .setQueryHandlers([])
     .setEventSubscribers([asClass(NewAccountRegisteredSubscriber).singleton()])

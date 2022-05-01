@@ -1,8 +1,10 @@
+import { ServiceClient } from '@krater/building-blocks';
 import { RequestHandler } from 'express';
-import proxy from 'express-http-proxy';
+// import proxy from 'express-http-proxy';
 
 interface Dependencies {
   tracingMiddleware: RequestHandler;
+  serviceClient: ServiceClient;
 }
 
 /**
@@ -31,11 +33,13 @@ interface Dependencies {
  *       500:
  *         description: Internal Server Error
  */
-const signUpAction = ({ tracingMiddleware }: Dependencies): RequestHandler[] => [
+const signUpAction = ({ tracingMiddleware, serviceClient }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
-  proxy('localhost:5100', {
-    proxyReqPathResolver: () => '/sign-up',
-  }),
+  async (req, res, next) =>
+    serviceClient
+      .send('identity.sign_up', { ...req.body, context: req.headers })
+      .then(() => res.sendStatus(201))
+      .catch(next),
 ];
 
 export default signUpAction;

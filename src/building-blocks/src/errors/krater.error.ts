@@ -1,5 +1,9 @@
 export class KraterError extends Error {
-  constructor(message: string, public readonly name = 'AppError', public readonly errorCode = 500) {
+  constructor(
+    public readonly message: string,
+    public readonly name = 'AppError',
+    public readonly errorCode = 500,
+  ) {
     super(message);
 
     Error.captureStackTrace(this, KraterError.captureStackTrace);
@@ -7,5 +11,13 @@ export class KraterError extends Error {
 
   public toString() {
     return `Error: ${this.name} | ${this.message}`;
+  }
+
+  public toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      errorCode: this.errorCode,
+    };
   }
 }

@@ -69,3 +69,5 @@ common/autoinstallers/*/.npmrc
 
 tsconfig.build.tsbuildinfo
 dist
+
+compose/data

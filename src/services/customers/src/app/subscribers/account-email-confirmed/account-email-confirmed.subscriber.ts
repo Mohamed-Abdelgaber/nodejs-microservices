@@ -11,7 +11,7 @@ interface Dependencies {
 export class AccountEmailConfirmedSubscriber
   implements EventSubscriber<AccountEmailConfirmedEvent>
 {
-  public readonly type = `identity.${AccountEmailConfirmedEvent.name}`;
+  public readonly type = `identity.${AccountEmailConfirmedEvent.name}.customers`;
 
   constructor(private readonly dependencies: Dependencies) {}
 

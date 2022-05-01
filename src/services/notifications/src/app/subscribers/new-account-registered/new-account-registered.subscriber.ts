@@ -10,7 +10,7 @@ interface Dependencies {
 }
 
 export class NewAccountRegisteredSubscriber implements EventSubscriber<NewAccountRegisteredEvent> {
-  public readonly type = `identity.${NewAccountRegisteredEvent.name}`;
+  public readonly type = `identity.${NewAccountRegisteredEvent.name}.notifications`;
 
   constructor(private readonly dependencies: Dependencies) {}
 

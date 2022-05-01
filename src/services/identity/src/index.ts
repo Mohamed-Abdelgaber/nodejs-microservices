@@ -4,10 +4,10 @@ import { asClass } from 'awilix';
 import { PasswordHashProviderServiceImpl } from '@infrastructure/password-hash-provider/password-hash-provider.service';
 import { AccountEmailCheckerServiceImpl } from '@infrastructure/account-email-checker/account-email-checker.service';
 import { RegisterNewAccountCommandHandler } from '@app/commands/register-new-account/register-new-account.command-handler';
-import { IdentityController } from '@api/identity.controller';
 import { AccountRegistrationRepositoryImpl } from '@infrastructure/account-registration/account-registration.repository';
 import { EmailVerificationCodeProviderServiceImpl } from '@infrastructure/email-verification-code/email-verification-code-provider.service';
 import { VerifyEmailAddressCommandHandler } from '@app/commands/verify-email-address/verify-email-address.command-handler';
+import { IdentityServiceController } from '@api/identity.service-controller';
 
 config();
 
@@ -22,7 +22,8 @@ config();
       asClass(RegisterNewAccountCommandHandler).singleton(),
       asClass(VerifyEmailAddressCommandHandler).singleton(),
     ])
-    .setControllers([asClass(IdentityController).singleton()])
+    .setServiceControllers([asClass(IdentityServiceController).singleton()])
+    .setControllers([])
     .setEventSubscribers([])
     .setQueryHandlers([])
     .setCustom({

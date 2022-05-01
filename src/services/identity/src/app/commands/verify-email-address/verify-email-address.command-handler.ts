@@ -31,7 +31,7 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
 
     const accountRegistration = await accountRegistrationRepository.findByEmail(email);
 
-    if (!email) {
+    if (!accountRegistration) {
       throw new UnauthorizedError();
     }
 

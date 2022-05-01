@@ -1,10 +1,10 @@
+import { KraterError } from '@errors/krater.error';
 import * as redis from 'redis';
 import { ServiceClient } from './service-client';
 
 export class RedisServiceClient implements ServiceClient {
   private publisher: redis.RedisClientType;
   private subscriber: redis.RedisClientType;
-  private readonly subscriptionsCount = new Map<string, number>();
 
   constructor() {
     this.publisher = redis.createClient();
@@ -19,23 +19,24 @@ export class RedisServiceClient implements ServiceClient {
     topic: string,
     payload: PayloadType,
   ): Promise<any> {
-    const replyTopic = this.getReplyTopic(topic);
+    return new Promise(async (resolve, reject) => {
+      const replyTopic = this.getReplyTopic(topic);
 
-    const subscriptionCount = this.subscriptionsCount.get(replyTopic) || 0;
+      await this.publisher.publish(topic, JSON.stringify(payload));
 
-    if (subscriptionCount <= 0) {
-      this.subscriptionsCount.set(replyTopic, subscriptionCount + 1);
+      await this.subscriber.subscribe(replyTopic, async (message) => {
+        const result = JSON.parse(message);
 
-      await this.subscriber.subscribe(replyTopic, (message) => {
-        this.publisher.set(replyTopic, message || '{}');
+        if ('error' in result) {
+          const { error } = result;
+
+          await this.subscriber.unsubscribe(replyTopic);
+
+          reject(new KraterError(error.message, error.name, error.errorCode));
+        }
+        resolve(result);
       });
-    }
-
-    await this.publisher.publish(topic, JSON.stringify(payload));
-
-    const value = (await this.publisher.get(replyTopic)) ?? '{}';
-
-    return JSON.parse(value);
+    });
   }
 
   public async subscribe<PayloadType extends object = {}>(
@@ -43,9 +44,13 @@ export class RedisServiceClient implements ServiceClient {
     callback: (data: PayloadType) => any | Promise<any>,
   ): Promise<void> {
     await this.subscriber.subscribe(topic, async (message) => {
-      const result = await callback(JSON.parse(message));
+      try {
+        const result = await callback(JSON.parse(message));
 
-      await this.publisher.publish(this.getReplyTopic(topic), JSON.stringify(result ?? {}));
+        await this.publisher.publish(this.getReplyTopic(topic), JSON.stringify(result ?? {}));
+      } catch (error) {
+        await this.publisher.publish(this.getReplyTopic(topic), JSON.stringify({ error }));
+      }
     });
   }
 
