@@ -23,7 +23,7 @@ const verifyEmailAddressActionValidation = celebrate(
  * @openapi
  *
  * /api/v1/identity/verify-email:
- *   post:
+ *   patch:
  *     tags:
  *        - Identity
  *     summary:
