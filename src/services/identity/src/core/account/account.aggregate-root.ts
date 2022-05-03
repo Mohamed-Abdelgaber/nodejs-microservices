@@ -3,6 +3,7 @@ import { AccountPassword } from '@core/account-password/account-password.value-o
 import { PasswordHashProviderService } from '@core/account-password/password-hash-provider.service';
 import { AccountStatus } from '@core/account-status/account-status.value-object';
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
+import { NewPasswordHasBeenSetEvent } from './events/new-password-has-been-set.event';
 import { AccountMustBeConfirmedRule } from './rules/account-must-be-confirmed.rule';
 import { PasswordMustBeValidRule } from './rules/password-must-be-valid.rule';
 
@@ -43,6 +44,27 @@ export class Account extends AggregateRoot<AccountProps> {
     Account.checkRule(new AccountMustBeConfirmedRule(this.props.status));
     await Account.checkRule(
       new PasswordMustBeValidRule(this.props.password, password, passwordHashProviderService),
+    );
+  }
+
+  public async changePassword(
+    oldPassword: string,
+    newPassword: string,
+    { passwordHashProviderService }: Dependencies,
+  ) {
+    await Account.checkRule(
+      new PasswordMustBeValidRule(this.props.password, oldPassword, passwordHashProviderService),
+    );
+
+    this.props.password = await AccountPassword.createNew(newPassword, {
+      passwordHashProviderService,
+    });
+
+    this.addDomainEvent(
+      new NewPasswordHasBeenSetEvent({
+        accountId: this.id.value,
+        email: this.props.email.toString(),
+      }),
     );
   }
 
