@@ -5,6 +5,7 @@ interface Dependencies {
   signUpAction: RequestHandler[];
   verifyEmailAddressAction: RequestHandler[];
   resendEmailVerificationCodeAction: RequestHandler[];
+  signInAction: RequestHandler[];
 }
 
 export class IdentityController implements Controller {
@@ -23,6 +24,8 @@ export class IdentityController implements Controller {
       '/resend-email-verification-code',
       this.dependencies.resendEmailVerificationCodeAction,
     );
+
+    router.post('/sign-in', this.dependencies.signInAction);
 
     return router;
   }

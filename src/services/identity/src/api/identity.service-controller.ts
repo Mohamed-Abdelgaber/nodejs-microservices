@@ -1,5 +1,6 @@
 import { RegisterNewAccountCommand } from '@app/commands/register-new-account/register-new-account.command';
 import { ResendEmailVerificationCodeCommand } from '@app/commands/resend-email-verification-code/resend-email-verification-code.command';
+import { SignInCommand, SignInCommandPayload } from '@app/commands/sign-in/sign-in.command';
 import { VerifyEmailAddressCommand } from '@app/commands/verify-email-address/verify-email-address.command';
 import { RegisterNewAccountPayload } from '@core/account-registration/account-registration.aggregate-root';
 import { CommandBus, ServiceClient, ServiceController } from '@krater/building-blocks';
@@ -34,6 +35,7 @@ export class IdentityServiceController implements ServiceController {
       this.handleSignUp(),
       this.handleVerifyEmail(),
       this.handleResendEmailVerificationCode(),
+      this.handleSignIn(),
     ]);
   }
 
@@ -73,5 +75,20 @@ export class IdentityServiceController implements ServiceController {
         );
       },
     );
+  }
+
+  private async handleSignIn() {
+    const { commandBus, serviceClient, tracer } = this.dependencies;
+
+    await serviceClient.subscribe<SignInCommandPayload>('identity.sign_in', (data) => {
+      const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+
+      return commandBus.handle(
+        new SignInCommand({
+          ...data,
+          context,
+        }),
+      );
+    });
   }
 }

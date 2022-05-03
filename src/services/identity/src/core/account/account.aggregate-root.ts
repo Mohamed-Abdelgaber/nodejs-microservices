@@ -45,4 +45,8 @@ export class Account extends AggregateRoot<AccountProps> {
       new PasswordMustBeValidRule(this.props.password, password, passwordHashProviderService),
     );
   }
+
+  public getId() {
+    return this.id.value;
+  }
 }

@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { ServiceBuilder } from '@krater/building-blocks';
+import { JwtTokenProviderService, ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
 import { PasswordHashProviderServiceImpl } from '@infrastructure/password-hash-provider/password-hash-provider.service';
 import { AccountEmailCheckerServiceImpl } from '@infrastructure/account-email-checker/account-email-checker.service';
@@ -9,6 +9,8 @@ import { EmailVerificationCodeProviderServiceImpl } from '@infrastructure/email-
 import { VerifyEmailAddressCommandHandler } from '@app/commands/verify-email-address/verify-email-address.command-handler';
 import { IdentityServiceController } from '@api/identity.service-controller';
 import { ResendEmailVerificationCodeCommandHandler } from '@app/commands/resend-email-verification-code/resend-email-verification-code.command-handler';
+import { AccountRepositoryImpl } from '@infrastructure/account/account.repository';
+import { SignInCommandHandler } from '@app/commands/sign-in/sign-in.command-handler';
 
 config();
 
@@ -23,6 +25,7 @@ config();
       asClass(RegisterNewAccountCommandHandler).singleton(),
       asClass(VerifyEmailAddressCommandHandler).singleton(),
       asClass(ResendEmailVerificationCodeCommandHandler).singleton(),
+      asClass(SignInCommandHandler).singleton(),
     ])
     .setServiceControllers([asClass(IdentityServiceController).singleton()])
     .setControllers([])
@@ -35,6 +38,8 @@ config();
       emailVerificationCodeProviderService: asClass(
         EmailVerificationCodeProviderServiceImpl,
       ).singleton(),
+      tokenProviderService: asClass(JwtTokenProviderService).singleton(),
+      accountRepository: asClass(AccountRepositoryImpl).singleton(),
     })
     .build();
 
