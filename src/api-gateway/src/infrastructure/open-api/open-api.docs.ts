@@ -7,6 +7,7 @@ export const openApiDocs = openApiJSDoc({
     info: {
       title: 'Krater API',
       version: '0.0.1',
+      description: 'This is API for Krater.',
     },
     components: {
       securitySchemes: {

@@ -28,6 +28,7 @@ import { ConsulServiceDiscovery, ServiceDiscovery } from './service-discovery';
 import mongoose from 'mongoose';
 import { RedisServiceClient } from './service-client/redis.service-client';
 import { ServiceClient } from './service-client/service-client';
+import { JwtTokenProviderService } from './token-provider';
 
 interface CustomResolution {
   [key: string]: Resolver<any>;
@@ -44,6 +45,7 @@ export class ServiceBuilder {
     this.container.register({
       logger: asValue(logger(name)),
       serviceClient: asClass(RedisServiceClient).singleton(),
+      tokenProviderService: asClass(JwtTokenProviderService).singleton(),
     });
 
     const tracerBuilder = new TracerBuilder(name).build();
