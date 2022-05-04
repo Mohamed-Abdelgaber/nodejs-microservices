@@ -6,6 +6,7 @@ interface Dependencies {
   verifyEmailAddressAction: RequestHandler[];
   resendEmailVerificationCodeAction: RequestHandler[];
   signInAction: RequestHandler[];
+  changePasswordAction: RequestHandler[];
 }
 
 export class IdentityController implements Controller {
@@ -26,6 +27,8 @@ export class IdentityController implements Controller {
     );
 
     router.post('/sign-in', this.dependencies.signInAction);
+
+    router.patch('/change-password', this.dependencies.changePasswordAction);
 
     return router;
   }

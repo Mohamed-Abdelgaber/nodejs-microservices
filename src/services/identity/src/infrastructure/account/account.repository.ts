@@ -21,4 +21,34 @@ export class AccountRepositoryImpl implements AccountRepository {
       passwordHash: result.password,
     });
   }
+
+  public async findById(id: string): Promise<Account> {
+    const result = await AccountModel.findOne({
+      id,
+    })
+      .select(['id', 'email', 'password', 'status'])
+      .exec();
+
+    if (!result) {
+      return null;
+    }
+
+    return Account.fromPersistence({
+      id: result.id,
+      email: result.email,
+      status: result.status,
+      passwordHash: result.password,
+    });
+  }
+
+  public async update(account: Account): Promise<void> {
+    await AccountModel.updateOne(
+      {
+        id: account.getId(),
+      },
+      {
+        password: account.getPasswordHash(),
+      },
+    );
+  }
 }

@@ -1,3 +1,7 @@
+import {
+  ChangePasswordCommand,
+  ChangePasswordCommandPayload,
+} from '@app/commands/change-password/change-password.command';
 import { RegisterNewAccountCommand } from '@app/commands/register-new-account/register-new-account.command';
 import { ResendEmailVerificationCodeCommand } from '@app/commands/resend-email-verification-code/resend-email-verification-code.command';
 import { SignInCommand, SignInCommandPayload } from '@app/commands/sign-in/sign-in.command';
@@ -36,6 +40,7 @@ export class IdentityServiceController implements ServiceController {
       this.handleVerifyEmail(),
       this.handleResendEmailVerificationCode(),
       this.handleSignIn(),
+      this.handleChangePassword(),
     ]);
   }
 
@@ -90,5 +95,23 @@ export class IdentityServiceController implements ServiceController {
         }),
       );
     });
+  }
+
+  private async handleChangePassword() {
+    const { commandBus, serviceClient, tracer } = this.dependencies;
+
+    await serviceClient.subscribe<ChangePasswordCommandPayload>(
+      'identity.change_password',
+      (data) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+
+        return commandBus.handle(
+          new ChangePasswordCommand({
+            ...data,
+            context,
+          }),
+        );
+      },
+    );
   }
 }

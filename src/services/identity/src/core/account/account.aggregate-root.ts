@@ -71,4 +71,8 @@ export class Account extends AggregateRoot<AccountProps> {
   public getId() {
     return this.id.value;
   }
+
+  public getPasswordHash() {
+    return this.props.password.getHash();
+  }
 }

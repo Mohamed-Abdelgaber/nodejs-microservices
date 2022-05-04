@@ -1,5 +1,6 @@
 import { EmailVerificationCodeHasBeenSentAgainSubscriber } from '@app/subscribers/email-verification-code-has-been-sent/email-verification-code-has-been-sent.subscriber';
 import { NewAccountRegisteredSubscriber } from '@app/subscribers/new-account-registered/new-account-registered.subscriber';
+import { NewPasswordHasBeenSetSubscriber } from '@app/subscribers/new-password-has-been-set/new-password-has-been-set.subscriber';
 import { MailhogMailerService } from '@infrastructure/mailer/mailhog-mailer.service';
 import { ServiceBuilder } from '@krater/building-blocks';
 import { asClass } from 'awilix';
@@ -19,6 +20,7 @@ config();
     .setEventSubscribers([
       asClass(NewAccountRegisteredSubscriber).singleton(),
       asClass(EmailVerificationCodeHasBeenSentAgainSubscriber).singleton(),
+      asClass(NewPasswordHasBeenSetSubscriber).singleton(),
     ])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setCustom({
