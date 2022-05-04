@@ -1,8 +1,11 @@
 import { FraudController } from '@api/fraud/fraud.controller';
 import { IdentityController } from '@api/identity/identity.controller';
 import { authMiddleware } from '@api/middlewares/auth.middleware';
+import corsMiddleware from '@api/middlewares/cors/cors.middleware';
+import { errorHandlerMiddleware } from '@api/middlewares/error-handler/error-handler.middleware';
+import { applySecurityMiddleware } from '@api/middlewares/security/security.middleware';
 import { openApiDocs } from '@infrastructure/open-api/open-api.docs';
-import { ServiceBuilder } from '@krater/building-blocks';
+import { Logger, NotFoundError, ServiceBuilder } from '@krater/building-blocks';
 import { asClass, asFunction } from 'awilix';
 import { config } from 'dotenv';
 import * as swaggerUI from 'swagger-ui-express';
@@ -25,11 +28,25 @@ config();
     })
     .build();
 
-  const port = Number(process.env.APP_PORT) ?? 4000;
+  const logger = service.getContainer().resolve<Logger>('logger');
 
   await service.bootstrap();
 
+  service.getApp().use(corsMiddleware);
+
+  applySecurityMiddleware(service.getApp());
+
+  service.getApp().use(corsMiddleware);
+
   service.getApp().use('/api-docs', swaggerUI.serve, swaggerUI.setup(openApiDocs));
+
+  service.getApp().use('*', (req, _, next) => {
+    next(new NotFoundError(`Route ${req.originalUrl} does not exist.`));
+  });
+
+  service.getApp().use(errorHandlerMiddleware(logger));
+
+  const port = Number(process.env.APP_PORT) ?? 4000;
 
   service.listen(port);
 })();
