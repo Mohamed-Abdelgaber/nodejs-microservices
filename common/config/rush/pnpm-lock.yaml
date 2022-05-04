@@ -25,10 +25,11 @@ specifiers:
   '@types/amqplib': ~0.8.2
   '@types/bcrypt': ~5.0.0
   '@types/consul': ~0.40.0
+  '@types/cors': ~2.8.12
   '@types/express': ~4.17.13
   '@types/express-http-proxy': ~1.6.3
+  '@types/hpp': ~0.2.2
   '@types/jest': ~27.0.3
-  '@types/jsonwebtoken': ~8.5.6
   '@types/mongoose-delete': ~0.5.9
   '@types/mongoose-id-validator': ~0.6.3
   '@types/node': ~16.11.12
@@ -45,14 +46,18 @@ specifiers:
   bcrypt: ~5.0.1
   celebrate: 15.0.1
   consul: ~0.40.0
+  cors: ~2.8.5
   eslint: 7.32.0
   eslint-config-airbnb-typescript: 12.3.1
   eslint-config-prettier: ~8.3.0
   eslint-plugin-import: 2.24.0
   eslint-plugin-prettier: ~4.0.0
   eslint-plugin-unicorn: ~39.0.0
+  express-enforces-ssl: ~1.1.0
   express-http-proxy: ~1.6.3
   handlebars: ~4.7.7
+  helmet: ~5.0.2
+  hpp: ~0.2.3
   http-status: ~1.5.1
   husky: ~7.0.4
   jest: ~27.4.5
@@ -106,10 +111,11 @@ dependencies:
   '@types/amqplib': 0.8.2
   '@types/bcrypt': 5.0.0
   '@types/consul': 0.40.0
+  '@types/cors': 2.8.12
   '@types/express': 4.17.13
   '@types/express-http-proxy': 1.6.3
+  '@types/hpp': 0.2.2
   '@types/jest': 27.0.3
-  '@types/jsonwebtoken': 8.5.8
   '@types/mongoose-delete': 0.5.9
   '@types/mongoose-id-validator': 0.6.3
   '@types/node': 16.11.27
@@ -126,14 +132,18 @@ dependencies:
   bcrypt: 5.0.1
   celebrate: 15.0.1
   consul: 0.40.0
+  cors: 2.8.5
   eslint: 7.32.0
   eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8
   eslint-config-prettier: 8.3.0_eslint@7.32.0
   eslint-plugin-import: 2.24.0_eslint@7.32.0
   eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
   eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
+  express-enforces-ssl: 1.1.0
   express-http-proxy: 1.6.3
   handlebars: 4.7.7
+  helmet: 5.0.2
+  hpp: 0.2.3
   http-status: 1.5.1
   husky: 7.0.4
   jest: 27.4.7
@@ -1925,6 +1935,16 @@ packages:
       '@types/node': 16.11.27
     dev: false
 
+  /@types/cors/2.8.12:
+    resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}
+    dev: false
+
+  /@types/express-enforces-ssl/1.1.1:
+    resolution: {integrity: sha512-TGLJv2jZs5E26lAqLMmcsqPJi1F5SxEsKbqdyAyYa3sicanX29ZP/bVW+1M3q1/fshMvQhGaPxql8IV7sbTh4A==}
+    dependencies:
+      '@types/express': 4.17.13
+    dev: false
+
   /@types/express-http-proxy/1.6.3:
     resolution: {integrity: sha512-dX3+Cb0HNPtqhC5JUWzzuODHRlgJRZx7KvwKVVwkOvm+8vOtpsh3qy8+qLv5X1hs4vdVHWKyXf86DwJot5H8pg==}
     dependencies:
@@ -1987,6 +2007,12 @@ packages:
     resolution: {integrity: sha512-8wWgLVP1TeGqgzZtCdt+F+k15DWQvLG1Yv6ZzPfb3D5WIo5/S+GGKtJBVo2uNEcqabP5Ifc71QnJTDnTmw1axA==}
     dependencies:
       '@types/node': 16.11.27
+    dev: false
+
+  /@types/hpp/0.2.2:
+    resolution: {integrity: sha512-BLgsawqFFbS3tFUr+mcBRfst+DumnSfi4PgyNeJAGk0eIxm7lKX1axmHVlbgKNAZS0caZA5/LSopuj0T2LKRPw==}
+    dependencies:
+      '@types/express': 4.17.13
     dev: false
 
   /@types/http-assert/1.5.3:
@@ -3250,6 +3276,14 @@ packages:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
     dev: false
 
+  /cors/2.8.5:
+    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
+    dev: false
+
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: false
@@ -4001,6 +4035,10 @@ packages:
       jest-message-util: 27.5.1
     dev: false
 
+  /express-enforces-ssl/1.1.0:
+    resolution: {integrity: sha1-zynGphxb3YAuLH7SZaSpjnSH0aw=}
+    dev: false
+
   /express-http-proxy/1.6.3:
     resolution: {integrity: sha512-/l77JHcOUrDUX8V67E287VEUQT0lbm71gdGVoodnlWBziarYKgMcpqT7xvh/HM8Jv52phw8Bd8tY+a7QjOr7Yg==}
     engines: {node: '>=6.0.0'}
@@ -4585,6 +4623,11 @@ packages:
       function-bind: 1.1.1
     dev: false
 
+  /helmet/5.0.2:
+    resolution: {integrity: sha512-QWlwUZZ8BtlvwYVTSDTBChGf8EOcQ2LkGMnQJxSzD1mUu8CCjXJZq/BXP8eWw4kikRnzlhtYo3lCk0ucmYA3Vg==}
+    engines: {node: '>=12.0.0'}
+    dev: false
+
   /hexer/1.5.0:
     resolution: {integrity: sha1-uGzoCFmOip0YksVx887dhvyfBlM=}
     engines: {node: '>= 0.10.x'}
@@ -4605,6 +4648,14 @@ packages:
 
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
+    dev: false
+
+  /hpp/0.2.3:
+    resolution: {integrity: sha512-4zDZypjQcxK/8pfFNR7jaON7zEUpXZxz4viyFmqjb3kWNWAHsLEUmWXcdn25c5l76ISvnD6hbOGO97cXUI3Ryw==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      lodash: 4.17.21
+      type-is: 1.6.18
     dev: false
 
   /html-encoding-sniffer/2.0.1:
@@ -8599,14 +8650,17 @@ packages:
     dev: false
 
   file:projects/api-gateway.tgz:
-    resolution: {integrity: sha512-wiSdjoPX5hUnoasCmLQXMkuYrxQuhsRQOpRyMX2OYPxU/W0MastSD/nc8ybRB2Q2oX5CZycHpcXThhoa2cStCg==, tarball: file:projects/api-gateway.tgz}
+    resolution: {integrity: sha512-FGItEH2FfKnvTVRtEgUrvMITVLayef1+b00g6iudLBFN9DbvsMJGL2HHjlFTL6mHrfqXFKY43pIw21JHmwDN9w==, tarball: file:projects/api-gateway.tgz}
     name: '@rush-temp/api-gateway'
     version: 0.0.0
     dependencies:
       '@opentelemetry/api': 1.0.4
       '@types/consul': 0.40.0
+      '@types/cors': 2.8.12
       '@types/express': 4.17.13
+      '@types/express-enforces-ssl': 1.1.1
       '@types/express-http-proxy': 1.6.3
+      '@types/hpp': 0.2.2
       '@types/jest': 27.0.3
       '@types/node': 16.11.27
       '@types/node-fetch': 2.6.1
@@ -8617,6 +8671,7 @@ packages:
       awilix: 6.0.0
       celebrate: 15.0.1
       consul: 0.40.0
+      cors: 2.8.5
       dotenv: 16.0.0
       eslint: 7.32.0
       eslint-config-airbnb-typescript: 12.3.1_c27c76bc318784551b1ca1bf0c09dfe8
@@ -8625,7 +8680,10 @@ packages:
       eslint-plugin-prettier: 4.0.0_6e6a25a49a944db0fa38418c3ba4bc86
       eslint-plugin-unicorn: 39.0.0_eslint@7.32.0
       express: 4.17.3
+      express-enforces-ssl: 1.1.0
       express-http-proxy: 1.6.3
+      helmet: 5.0.2
+      hpp: 0.2.3
       husky: 7.0.4
       jest: 27.4.7_ts-node@10.7.0
       node-fetch: 2.6.7
