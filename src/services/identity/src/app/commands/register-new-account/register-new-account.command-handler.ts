@@ -23,6 +23,14 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
   public async handle({
     payload: { context, ...payload },
   }: RegisterNewAccountCommand): Promise<void> {
+    const {
+      accountEmailCheckerService,
+      passwordHashProviderService,
+      messageBus,
+      emailVerificationCodeProviderService,
+      accountRegistrationRepository,
+    } = this.dependencies;
+
     const span = this.dependencies.tracer.startSpan(
       '[Command] Register new account command handler',
       {
@@ -38,26 +46,19 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
 
     this.dependencies.tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
 
-    const {
-      accountEmailCheckerService,
-      passwordHashProviderService,
-      messageBus,
-      emailVerificationCodeProviderService,
-    } = this.dependencies;
-
     const accountRegistration = await AccountRegistration.registerNew(payload, {
       accountEmailCheckerService,
       passwordHashProviderService,
       emailVerificationCodeProviderService,
     });
 
+    await accountRegistrationRepository.insert(accountRegistration);
+
     const eventPromises = accountRegistration.getDomainEvents().map((event) =>
       messageBus.sendEvent(event, {
         spanContext: headers as SpanContext,
       }),
     );
-
-    await this.dependencies.accountRegistrationRepository.insert(accountRegistration);
 
     await Promise.all(eventPromises);
 

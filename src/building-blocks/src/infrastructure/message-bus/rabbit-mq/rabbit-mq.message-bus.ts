@@ -48,7 +48,7 @@ export class RabbitMqMessageBus implements MessageBus {
       durable: true,
     });
 
-    await this.channel.assertQueue(`${service}.${event}`, { exclusive: true });
+    await this.channel.assertQueue(`${service}.${event}`);
 
     await this.channel.bindQueue(
       `${service}.${event}`,
@@ -56,12 +56,18 @@ export class RabbitMqMessageBus implements MessageBus {
       `${service}.${event.split('.')[0]}.*`,
     );
 
-    await this.channel.consume(`${service}.${event}`, async (message) => {
-      const { payload, context } = JSON.parse(message.content.toString());
+    await this.channel.consume(
+      `${service}.${event}`,
+      async (message) => {
+        const { payload, context } = JSON.parse(message.content.toString());
 
-      await callback(new DomainEvent(service, payload), context);
+        await callback(new DomainEvent(service, payload), context);
 
-      this.channel.ack(message);
-    });
+        this.channel.ack(message);
+      },
+      {
+        noAck: false,
+      },
+    );
   }
 }

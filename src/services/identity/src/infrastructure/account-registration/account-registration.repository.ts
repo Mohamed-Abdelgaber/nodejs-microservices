@@ -45,12 +45,12 @@ export class AccountRegistrationRepositoryImpl implements AccountRegistrationRep
       },
     );
 
-    const newEmail = rawEmailVerificationCodes.find(
+    const newCode = rawEmailVerificationCodes.find(
       (code) => code.status === EmailVerificationCodeStatusValue.Active,
     );
 
-    if (newEmail) {
-      const { _id } = await EmailVerificationCodeModel.create(newEmail);
+    if (newCode) {
+      const { _id } = await EmailVerificationCodeModel.create(newCode);
 
       await AccountModel.updateOne(
         { id },

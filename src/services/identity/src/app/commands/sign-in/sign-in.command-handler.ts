@@ -28,6 +28,10 @@ export class SignInCommandHandler implements CommandHandler<SignInCommand, SignI
       childOf: context,
     });
 
+    span.addTags({
+      'x-type': 'command',
+    });
+
     const account = await accountRepository.findByEmail(email);
 
     if (!account) {

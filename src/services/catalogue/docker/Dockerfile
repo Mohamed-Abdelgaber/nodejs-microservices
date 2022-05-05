@@ -20,6 +20,8 @@ COPY ./src/database ./app/src/database
 
 COPY ./src/services/catalogue ./app/src/services/catalogue
 
+COPY ./src/services/catalogue/docker/rush.json ./app/src/services/catalogue/
+
 RUN cd app/src/services/catalogue && rush update && rush build
 
 EXPOSE $APP_PORT
