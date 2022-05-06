@@ -1,3 +1,4 @@
+import { CatalogueController } from '@api/catalogue/catalogue.controller';
 import { FraudController } from '@api/fraud/fraud.controller';
 import { IdentityController } from '@api/identity/identity.controller';
 import { authMiddleware } from '@api/middlewares/auth.middleware';
@@ -20,7 +21,11 @@ config();
     .setServiceControllers([])
     .loadActions([`${__dirname}/**/*.action.ts`, `${__dirname}/**/*.action.js`])
     .setEventSubscribers([])
-    .setControllers([asClass(FraudController).singleton(), asClass(IdentityController).singleton()])
+    .setControllers([
+      asClass(FraudController).singleton(),
+      asClass(IdentityController).singleton(),
+      asClass(CatalogueController).singleton(),
+    ])
     .setQueryHandlers([])
     .useConsul('http://localhost:8500')
     .setCustom({
