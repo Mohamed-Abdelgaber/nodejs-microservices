@@ -17,23 +17,19 @@ export class NewAccountRegisteredSubscriber implements EventSubscriber<NewAccoun
     event: NewAccountRegisteredEvent,
     messageContext: MessageContext,
   ): Promise<void> {
-    const ctx = this.dependencies.tracer.extract(FORMAT_HTTP_HEADERS, messageContext.spanContext);
-
-    const span = this.dependencies.tracer.startSpan('[Subscriber] Creating new customer', {
-      childOf: ctx,
-    });
-
-    span.addTags({
-      'x-type': 'subscriber',
-    });
+    const context = this.dependencies.tracer.extract(
+      FORMAT_HTTP_HEADERS,
+      messageContext.spanContext,
+    );
 
     await this.dependencies.commandBus.handle(
       new CreateCustomerCommand({
         ...event.payload,
         context: messageContext.spanContext,
       }),
+      {
+        context,
+      },
     );
-
-    span.finish();
   }
 }

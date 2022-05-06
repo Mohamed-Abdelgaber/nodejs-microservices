@@ -39,10 +39,16 @@ const resendEmailVerificationCodeAction = ({
   tracingMiddleware,
   (req, res, next) =>
     serviceClient
-      .send('identity.resend_email_verification_code', {
-        ...req.body,
-        context: req.headers,
-      })
+      .send(
+        'identity.resend_email_verification_code',
+        {
+          ...req.body,
+          context: req.headers,
+        },
+        {
+          requestHeaders: req.headers,
+        },
+      )
       .then(() => res.sendStatus(204))
       .catch(next),
 ];

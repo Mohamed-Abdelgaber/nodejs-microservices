@@ -1,11 +1,9 @@
 import { MailerService } from '@core/mailer/mailer.service';
-import { EventSubscriber, Logger, MessageContext } from '@krater/building-blocks';
+import { EventSubscriber, Logger } from '@krater/building-blocks';
 import { EmailVerificationCodeHasBeenSentAgainEvent } from '@root/integration-events/email-verification-code-has-been-sent-again.event';
-import { FORMAT_HTTP_HEADERS, Tracer } from 'opentracing';
 
 interface Dependencies {
   logger: Logger;
-  tracer: Tracer;
   mailerService: MailerService;
 }
 
@@ -16,24 +14,10 @@ export class EmailVerificationCodeHasBeenSentAgainSubscriber
 
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle(
-    { payload: { email, verificationCode } }: EmailVerificationCodeHasBeenSentAgainEvent,
-    messageContext: MessageContext,
-  ): Promise<void> {
-    const { logger, mailerService, tracer } = this.dependencies;
-
-    const ctx = tracer.extract(FORMAT_HTTP_HEADERS, messageContext.spanContext);
-
-    const span = tracer.startSpan(
-      '[Subscriber] Resend email notification with new email verification code',
-      {
-        childOf: ctx,
-      },
-    );
-
-    span.addTags({
-      'x-type': 'subscriber',
-    });
+  public async handle({
+    payload: { email, verificationCode },
+  }: EmailVerificationCodeHasBeenSentAgainEvent): Promise<void> {
+    const { logger, mailerService } = this.dependencies;
 
     logger.info(`Sending email with new email verification code to ${email}`);
 
@@ -46,7 +30,5 @@ export class EmailVerificationCodeHasBeenSentAgainSubscriber
       template: 'welcome',
       to: email,
     });
-
-    span.finish();
   }
 }

@@ -55,7 +55,13 @@ const signUpAction = ({ tracingMiddleware, serviceClient }: Dependencies): Reque
   registerNewAccountActionValidation,
   async (req, res, next) =>
     serviceClient
-      .send('identity.sign_up', { ...req.body, context: req.headers })
+      .send(
+        'identity.sign_up',
+        { ...req.body, context: req.headers },
+        {
+          requestHeaders: req.headers,
+        },
+      )
       .then(() => res.sendStatus(201))
       .catch(next),
 ];

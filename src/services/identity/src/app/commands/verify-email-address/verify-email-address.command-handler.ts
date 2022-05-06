@@ -1,5 +1,10 @@
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
-import { CommandHandler, MessageBus, UnauthorizedError } from '@krater/building-blocks';
+import {
+  CommandHandler,
+  CommandHandlerContext,
+  MessageBus,
+  UnauthorizedError,
+} from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { VerifyEmailAddressCommand } from './verify-email-address.command';
 
@@ -12,22 +17,15 @@ interface Dependencies {
 export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEmailAddressCommand> {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle({
-    payload: { context, email, verificationCode },
-  }: VerifyEmailAddressCommand): Promise<void> {
+  public async handle(
+    { payload: { email, verificationCode } }: VerifyEmailAddressCommand,
+    { spanContext }: CommandHandlerContext,
+  ): Promise<void> {
     const { accountRegistrationRepository, tracer, messageBus } = this.dependencies;
-
-    const span = tracer.startSpan('[Command Handler] Verify Email address for account', {
-      childOf: context,
-    });
-
-    span.addTags({
-      'x-type': 'command',
-    });
 
     const headers = {};
 
-    this.dependencies.tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
+    tracer.inject(spanContext, FORMAT_HTTP_HEADERS, headers);
 
     const accountRegistration = await accountRegistrationRepository.findByEmail(email);
 
@@ -46,7 +44,5 @@ export class VerifyEmailAddressCommandHandler implements CommandHandler<VerifyEm
     );
 
     await Promise.all(eventPromises);
-
-    span.finish();
   }
 }

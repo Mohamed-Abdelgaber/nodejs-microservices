@@ -1,11 +1,9 @@
 import { MailerService } from '@core/mailer/mailer.service';
-import { EventSubscriber, Logger, MessageContext } from '@krater/building-blocks';
+import { EventSubscriber, Logger } from '@krater/building-blocks';
 import { NewPasswordHasBeenSetEvent } from '@root/integration-events/new-password-has-been-set.event';
-import { FORMAT_HTTP_HEADERS, Tracer } from 'opentracing';
 
 interface Dependencies {
   logger: Logger;
-  tracer: Tracer;
   mailerService: MailerService;
 }
 
@@ -16,24 +14,8 @@ export class NewPasswordHasBeenSetSubscriber
 
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle(
-    { payload: { email } }: NewPasswordHasBeenSetEvent,
-    messageContext: MessageContext,
-  ): Promise<void> {
-    const { logger, mailerService, tracer } = this.dependencies;
-
-    const ctx = tracer.extract(FORMAT_HTTP_HEADERS, messageContext.spanContext);
-
-    const span = tracer.startSpan(
-      '[Subscriber] Send email notification to user which updates his password.',
-      {
-        childOf: ctx,
-      },
-    );
-
-    span.addTags({
-      'x-type': 'subscriber',
-    });
+  public async handle({ payload: { email } }: NewPasswordHasBeenSetEvent): Promise<void> {
+    const { logger, mailerService } = this.dependencies;
 
     logger.info(`Sending email to user (${email}) which updates his password.`);
 
@@ -45,7 +27,5 @@ export class NewPasswordHasBeenSetSubscriber
       template: 'new-password',
       to: email,
     });
-
-    span.finish();
   }
 }

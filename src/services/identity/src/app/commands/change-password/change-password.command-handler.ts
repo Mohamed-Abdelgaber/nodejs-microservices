@@ -1,6 +1,11 @@
 import { PasswordHashProviderService } from '@core/account-password/password-hash-provider.service';
 import { AccountRepository } from '@core/account/account.repository';
-import { CommandHandler, MessageBus, UnauthorizedError } from '@krater/building-blocks';
+import {
+  CommandHandler,
+  MessageBus,
+  UnauthorizedError,
+  CommandHandlerContext,
+} from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { ChangePasswordCommand } from './change-password.command';
 
@@ -14,15 +19,12 @@ interface Dependencies {
 export class ChangePasswordCommandHandler implements CommandHandler<ChangePasswordCommand> {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle({
-    payload: { accountId, context, newPassword, oldPassword },
-  }: ChangePasswordCommand): Promise<void> {
+  public async handle(
+    { payload: { accountId, newPassword, oldPassword } }: ChangePasswordCommand,
+    { spanContext }: CommandHandlerContext,
+  ): Promise<void> {
     const { accountRepository, tracer, passwordHashProviderService, messageBus } =
       this.dependencies;
-
-    const span = tracer.startSpan('[Command Handler] Change password command handler', {
-      childOf: context,
-    });
 
     const account = await accountRepository.findById(accountId);
 
@@ -38,7 +40,7 @@ export class ChangePasswordCommandHandler implements CommandHandler<ChangePasswo
 
     const headers = {};
 
-    tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
+    tracer.inject(spanContext, FORMAT_HTTP_HEADERS, headers);
 
     const eventPromises = account.getDomainEvents().map((event) =>
       messageBus.sendEvent(event, {
@@ -47,7 +49,5 @@ export class ChangePasswordCommandHandler implements CommandHandler<ChangePasswo
     );
 
     await Promise.all(eventPromises);
-
-    span.finish();
   }
 }

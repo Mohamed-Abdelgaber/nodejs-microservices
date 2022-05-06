@@ -58,11 +58,17 @@ const changePasswordAction = ({
   changePasswordActionValidation,
   (req, res, next) =>
     serviceClient
-      .send('identity.change_password', {
-        ...req.body,
-        accountId: res.locals.accountId,
-        context: req.headers,
-      })
+      .send(
+        'identity.change_password',
+        {
+          ...req.body,
+          accountId: res.locals.accountId,
+          context: req.headers,
+        },
+        {
+          requestHeaders: req.headers,
+        },
+      )
       .then(() => res.sendStatus(204))
       .catch(next),
 ];

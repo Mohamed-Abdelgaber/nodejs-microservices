@@ -1,7 +1,6 @@
 import { PasswordHashProviderService } from '@core/account-password/password-hash-provider.service';
 import { AccountRepository } from '@core/account/account.repository';
 import { CommandHandler, TokenProviderService, UnauthorizedError } from '@krater/building-blocks';
-import { Tracer } from 'opentracing';
 import { SignInCommand } from './sign-in.command';
 
 export interface SignInCommandResult {
@@ -11,7 +10,6 @@ export interface SignInCommandResult {
 interface Dependencies {
   tokenProviderService: TokenProviderService;
   accountRepository: AccountRepository;
-  tracer: Tracer;
   passwordHashProviderService: PasswordHashProviderService;
 }
 
@@ -19,18 +17,10 @@ export class SignInCommandHandler implements CommandHandler<SignInCommand, SignI
   constructor(private readonly dependencies: Dependencies) {}
 
   public async handle({
-    payload: { email, password, context },
+    payload: { email, password },
   }: SignInCommand): Promise<SignInCommandResult> {
-    const { accountRepository, tokenProviderService, tracer, passwordHashProviderService } =
+    const { accountRepository, tokenProviderService, passwordHashProviderService } =
       this.dependencies;
-
-    const span = tracer.startSpan('[Command Handler] Sign In command handler', {
-      childOf: context,
-    });
-
-    span.addTags({
-      'x-type': 'command',
-    });
 
     const account = await accountRepository.findByEmail(email);
 
@@ -50,10 +40,8 @@ export class SignInCommandHandler implements CommandHandler<SignInCommand, SignI
       'secret',
     );
 
-    span.finish();
-
     return {
-      token,
+      token: `Bearer ${token}`,
     };
   }
 }

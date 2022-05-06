@@ -20,13 +20,22 @@ export class AccountRegistrationRepositoryImpl implements AccountRegistrationRep
   public async findByEmail(email: string) {
     const result = await AccountModel.findOne({
       email: email.toLowerCase(),
-    }).populate('emailVerificationCodes');
+    });
+
+    const emailVerificationCodes = await EmailVerificationCodeModel.find({
+      _id: {
+        $in: result.emailVerificationCodes,
+      },
+    });
 
     if (!result) {
       return null;
     }
 
-    return AccountRegistration.fromPersistence(result);
+    return AccountRegistration.fromPersistence({
+      ...result.toJSON(),
+      emailVerificationCodes,
+    });
   }
 
   public async update(accountRegistration: AccountRegistration): Promise<void> {

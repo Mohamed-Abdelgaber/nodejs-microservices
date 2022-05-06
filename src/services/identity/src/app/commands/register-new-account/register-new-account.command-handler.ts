@@ -3,7 +3,12 @@ import { PasswordHashProviderService } from '@core/account-password/password-has
 import { AccountRegistration } from '@core/account-registration/account-registration.aggregate-root';
 import { AccountRegistrationRepository } from '@core/account-registration/account-registration.repository';
 import { EmailVerificationCodeProviderService } from '@core/email-verification-code/email-verification-code-provider.service';
-import { CommandHandler, MessageBus, ServiceClient } from '@krater/building-blocks';
+import {
+  CommandHandler,
+  CommandHandlerContext,
+  MessageBus,
+  ServiceClient,
+} from '@krater/building-blocks';
 import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import { RegisterNewAccountCommand } from './register-new-account.command';
 
@@ -20,9 +25,10 @@ interface Dependencies {
 export class RegisterNewAccountCommandHandler implements CommandHandler<RegisterNewAccountCommand> {
   constructor(private readonly dependencies: Dependencies) {}
 
-  public async handle({
-    payload: { context, ...payload },
-  }: RegisterNewAccountCommand): Promise<void> {
+  public async handle(
+    { payload }: RegisterNewAccountCommand,
+    { spanContext }: CommandHandlerContext,
+  ): Promise<void> {
     const {
       accountEmailCheckerService,
       passwordHashProviderService,
@@ -31,20 +37,9 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
       accountRegistrationRepository,
     } = this.dependencies;
 
-    const span = this.dependencies.tracer.startSpan(
-      '[Command] Register new account command handler',
-      {
-        childOf: context,
-      },
-    );
-
-    span.addTags({
-      'x-type': 'command',
-    });
-
     const headers = {};
 
-    this.dependencies.tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
+    this.dependencies.tracer.inject(spanContext, FORMAT_HTTP_HEADERS, headers);
 
     const accountRegistration = await AccountRegistration.registerNew(payload, {
       accountEmailCheckerService,
@@ -61,7 +56,5 @@ export class RegisterNewAccountCommandHandler implements CommandHandler<Register
     );
 
     await Promise.all(eventPromises);
-
-    span.finish();
   }
 }

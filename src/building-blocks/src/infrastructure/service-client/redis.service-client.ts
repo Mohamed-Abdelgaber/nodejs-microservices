@@ -1,12 +1,21 @@
 import { KraterError } from '@errors/krater.error';
+import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
 import * as redis from 'redis';
-import { ServiceClient } from './service-client';
+import {
+  ServiceClient,
+  ServiceClientContext,
+  ServiceClientSubscriberContext,
+} from './service-client';
+
+interface Dependencies {
+  tracer: Tracer;
+}
 
 export class RedisServiceClient implements ServiceClient {
   private publisher: redis.RedisClientType;
   private subscriber: redis.RedisClientType;
 
-  constructor() {
+  constructor(private readonly dependencies: Dependencies) {
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
   }
@@ -18,11 +27,26 @@ export class RedisServiceClient implements ServiceClient {
   public async send<PayloadType extends object = {}>(
     topic: string,
     payload: PayloadType,
+    context: ServiceClientContext,
   ): Promise<any> {
     return new Promise(async (resolve, reject) => {
+      const { tracer } = this.dependencies;
+
+      const span = tracer.startSpan(`[Service Client] Sending request for topic ${topic}.`, {
+        childOf: tracer.extract(FORMAT_HTTP_HEADERS, context.requestHeaders),
+      });
+
+      span.addTags({
+        'x-type': 'request',
+      });
+
+      const headers = {};
+
+      tracer.inject(span.context(), FORMAT_HTTP_HEADERS, headers);
+
       const replyTopic = this.getReplyTopic(topic);
 
-      await this.publisher.publish(topic, JSON.stringify(payload));
+      await this.publisher.publish(topic, JSON.stringify({ payload, headers }));
 
       await this.subscriber.subscribe(replyTopic, async (message) => {
         const result = JSON.parse(message);
@@ -32,8 +56,12 @@ export class RedisServiceClient implements ServiceClient {
 
           await this.subscriber.unsubscribe(replyTopic);
 
-          reject(new KraterError(error.message, error.name, error.errorCode));
+          span.finish();
+
+          return reject(new KraterError(error.message, error.name, error.errorCode));
         }
+
+        span.finish();
         resolve(result);
       });
     });
@@ -41,15 +69,35 @@ export class RedisServiceClient implements ServiceClient {
 
   public async subscribe<PayloadType extends object = {}>(
     topic: string,
-    callback: (data: PayloadType) => any | Promise<any>,
+    callback: (data: PayloadType, context: ServiceClientSubscriberContext) => any | Promise<any>,
   ): Promise<void> {
+    const { tracer } = this.dependencies;
+
     await this.subscriber.subscribe(topic, async (message) => {
+      const { payload, headers } = JSON.parse(message);
+
+      const span = tracer.startSpan(`[Service Client] Handle request for topic ${topic}.`, {
+        childOf: tracer.extract(FORMAT_HTTP_HEADERS, headers),
+      });
+
+      span.addTags({
+        'x-type': 'request',
+      });
+
+      const spanHeaders = {};
+
+      tracer.inject(span.context(), FORMAT_HTTP_HEADERS, spanHeaders);
+
       try {
-        const result = await callback(JSON.parse(message));
+        const result = await callback(payload, {
+          spanContext: spanHeaders as SpanContext,
+        });
 
         await this.publisher.publish(this.getReplyTopic(topic), JSON.stringify(result ?? {}));
       } catch (error) {
         await this.publisher.publish(this.getReplyTopic(topic), JSON.stringify({ error }));
+      } finally {
+        span.finish();
       }
     });
   }

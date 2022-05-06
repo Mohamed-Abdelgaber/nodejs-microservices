@@ -3,12 +3,14 @@ import { MessageBus, MessageContext } from '../message-bus';
 import amqp, { Channel } from 'amqplib';
 import { CommandBus } from '@app/command-bus';
 import { EventSubscriber } from '@app/event-subscriber';
+import { FORMAT_HTTP_HEADERS, Tracer } from 'opentracing';
 
 interface Dependencies {
   commandBus: CommandBus;
   subscribers: EventSubscriber<any>[];
   rabbitUrl: string;
   serviceName: string;
+  tracer: Tracer;
 }
 
 export enum MessageType {
@@ -32,11 +34,24 @@ export class RabbitMqMessageBus implements MessageBus {
   }
 
   public async sendEvent(event: DomainEvent<{}>, context: MessageContext): Promise<void> {
+    const span = this.dependencies.tracer.startSpan(
+      `[Message Bus] Publishing event${event.constructor.name.replace(/([A-Z])/g, ' $1')}.`,
+      {
+        childOf: this.dependencies.tracer.extract(FORMAT_HTTP_HEADERS, context.spanContext),
+      },
+    );
+
+    span.addTags({
+      'x-type': 'event',
+    });
+
     this.channel.publish(
       this.dependencies.serviceName,
       `${event.service}.${event.constructor.name}.${event.service}`,
       Buffer.from(JSON.stringify({ payload: event.payload, context })),
     );
+
+    span.finish();
   }
 
   public async subscribeToEvent(
@@ -61,7 +76,20 @@ export class RabbitMqMessageBus implements MessageBus {
       async (message) => {
         const { payload, context } = JSON.parse(message.content.toString());
 
+        const span = this.dependencies.tracer.startSpan(
+          `[Message Bus] Subscribing to event${event.split('.')[0].replace(/([A-Z])/g, ' $1')}.`,
+          {
+            childOf: this.dependencies.tracer.extract(FORMAT_HTTP_HEADERS, context.spanContext),
+          },
+        );
+
+        span.addTags({
+          'x-type': 'event',
+        });
+
         await callback(new DomainEvent(service, payload), context);
+
+        span.finish();
 
         this.channel.ack(message);
       },

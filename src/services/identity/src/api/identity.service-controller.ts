@@ -8,7 +8,7 @@ import { SignInCommand, SignInCommandPayload } from '@app/commands/sign-in/sign-
 import { VerifyEmailAddressCommand } from '@app/commands/verify-email-address/verify-email-address.command';
 import { RegisterNewAccountPayload } from '@core/account-registration/account-registration.aggregate-root';
 import { CommandBus, ServiceClient, ServiceController } from '@krater/building-blocks';
-import { FORMAT_HTTP_HEADERS, SpanContext, Tracer } from 'opentracing';
+import { FORMAT_HTTP_HEADERS, Tracer } from 'opentracing';
 
 interface Dependencies {
   serviceClient: ServiceClient;
@@ -16,19 +16,13 @@ interface Dependencies {
   tracer: Tracer;
 }
 
-interface RegisterNewAccountMessage extends RegisterNewAccountPayload {
-  context: SpanContext;
-}
-
 interface VerifyEmailMessage {
   email: string;
   verificationCode: string;
-  context: SpanContext;
 }
 
 interface ResendEmailVerificationCodeMessage {
   email: string;
-  context: SpanContext;
 }
 
 export class IdentityServiceController implements ServiceController {
@@ -47,21 +41,31 @@ export class IdentityServiceController implements ServiceController {
   private async handleSignUp() {
     const { commandBus, serviceClient, tracer } = this.dependencies;
 
-    await serviceClient.subscribe<RegisterNewAccountMessage>('identity.sign_up', (data) => {
-      const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+    await serviceClient.subscribe<RegisterNewAccountPayload>(
+      'identity.sign_up',
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
-      return commandBus.handle(new RegisterNewAccountCommand({ ...data, context }));
-    });
+        return commandBus.handle(new RegisterNewAccountCommand({ ...data }), {
+          context,
+        });
+      },
+    );
   }
 
   private async handleVerifyEmail() {
     const { commandBus, serviceClient, tracer } = this.dependencies;
 
-    await serviceClient.subscribe<VerifyEmailMessage>('identity.verify_email_address', (data) => {
-      const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+    await serviceClient.subscribe<VerifyEmailMessage>(
+      'identity.verify_email_address',
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
-      return commandBus.handle(new VerifyEmailAddressCommand({ ...data, context }));
-    });
+        return commandBus.handle(new VerifyEmailAddressCommand({ ...data }), {
+          context,
+        });
+      },
+    );
   }
 
   public async handleResendEmailVerificationCode() {
@@ -69,14 +73,16 @@ export class IdentityServiceController implements ServiceController {
 
     await serviceClient.subscribe<ResendEmailVerificationCodeMessage>(
       'identity.resend_email_verification_code',
-      (data) => {
-        const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
         return commandBus.handle(
           new ResendEmailVerificationCodeCommand({
             ...data,
-            context,
           }),
+          {
+            context,
+          },
         );
       },
     );
@@ -85,16 +91,21 @@ export class IdentityServiceController implements ServiceController {
   private async handleSignIn() {
     const { commandBus, serviceClient, tracer } = this.dependencies;
 
-    await serviceClient.subscribe<SignInCommandPayload>('identity.sign_in', (data) => {
-      const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+    await serviceClient.subscribe<SignInCommandPayload>(
+      'identity.sign_in',
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
-      return commandBus.handle(
-        new SignInCommand({
-          ...data,
-          context,
-        }),
-      );
-    });
+        return commandBus.handle(
+          new SignInCommand({
+            ...data,
+          }),
+          {
+            context,
+          },
+        );
+      },
+    );
   }
 
   private async handleChangePassword() {
@@ -102,14 +113,16 @@ export class IdentityServiceController implements ServiceController {
 
     await serviceClient.subscribe<ChangePasswordCommandPayload>(
       'identity.change_password',
-      (data) => {
-        const context = tracer.extract(FORMAT_HTTP_HEADERS, data.context);
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
         return commandBus.handle(
           new ChangePasswordCommand({
             ...data,
-            context,
           }),
+          {
+            context,
+          },
         );
       },
     );

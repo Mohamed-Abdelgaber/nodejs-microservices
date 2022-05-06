@@ -45,10 +45,16 @@ const signInAction = ({ serviceClient, tracingMiddleware }: Dependencies): Reque
   signInActionValidation,
   (req, res, next) =>
     serviceClient
-      .send('identity.sign_in', {
-        ...req.body,
-        context: req.headers,
-      })
+      .send(
+        'identity.sign_in',
+        {
+          ...req.body,
+          context: req.headers,
+        },
+        {
+          requestHeaders: req.headers,
+        },
+      )
       .then((tokenResponse) => res.status(200).json(tokenResponse))
       .catch(next),
 ];
