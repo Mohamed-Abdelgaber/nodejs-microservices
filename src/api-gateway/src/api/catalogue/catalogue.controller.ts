@@ -3,6 +3,7 @@ import { RequestHandler, Router } from 'express';
 
 interface Dependencies {
   createNewProductAction: RequestHandler[];
+  addNewProductTypeAction: RequestHandler[];
 }
 
 export class CatalogueController implements Controller {
@@ -14,6 +15,8 @@ export class CatalogueController implements Controller {
     const router = Router();
 
     router.post('/products', this.dependencies.createNewProductAction);
+
+    router.post('/product-types', this.dependencies.addNewProductTypeAction);
 
     return router;
   }

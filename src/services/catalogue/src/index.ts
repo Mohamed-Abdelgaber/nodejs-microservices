@@ -4,7 +4,7 @@ import { asClass } from 'awilix';
 import { ProductRepositoryImpl } from '@infrastructure/product/product.repository';
 import { CatalogueServiceController } from '@api/catalogue.service-controller';
 import { CreateNewProductCommandHandler } from '@app/commands/create-new-product/create-new-product.command-handler';
-import { ProductTypeProviderServiceImpl } from '@infrastructure/product-type/product-type-provider.service';
+import { AddNewProductTypeCommandHandler } from '@app/commands/add-new-product-type/add-new-product-type.command-handler';
 
 config();
 
@@ -13,7 +13,10 @@ config();
     .setName('catalogue')
     .useRabbitMQ('amqp://localhost')
     .useMongo('mongodb://localhost:27017/catalogue')
-    .setCommandHandlers([asClass(CreateNewProductCommandHandler).singleton()])
+    .setCommandHandlers([
+      asClass(CreateNewProductCommandHandler).singleton(),
+      asClass(AddNewProductTypeCommandHandler).singleton(),
+    ])
     .setQueryHandlers([])
     .setControllers([])
     .loadActions([])
@@ -22,7 +25,6 @@ config();
     .setServiceControllers([asClass(CatalogueServiceController).singleton()])
     .setCustom({
       productRepository: asClass(ProductRepositoryImpl).singleton(),
-      productTypeProviderService: asClass(ProductTypeProviderServiceImpl).singleton(),
     })
     .build();
 

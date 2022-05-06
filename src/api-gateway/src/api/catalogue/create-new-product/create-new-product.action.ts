@@ -7,15 +7,20 @@ interface Dependencies {
   serviceClient: ServiceClient;
 }
 
-const createNewProductActionValidation = celebrate({
-  [Segments.BODY]: Joi.object().keys({
-    name: Joi.string().trim().required(),
-    description: Joi.string().trim().required(),
-    type: Joi.string().trim().required(),
-    weight: Joi.number().required().min(0).integer(),
-    price: Joi.number().min(0).integer(),
-  }),
-});
+const createNewProductActionValidation = celebrate(
+  {
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().trim().required(),
+      description: Joi.string().trim().required(),
+      type: Joi.string().trim().required(),
+      weight: Joi.number().required().min(0).integer(),
+      price: Joi.number().min(0).integer(),
+    }),
+  },
+  {
+    abortEarly: false,
+  },
+);
 
 /**
  * @openapi
@@ -34,6 +39,10 @@ const createNewProductActionValidation = celebrate({
  *     responses:
  *       201:
  *        description: Product created successfuly.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#components/schemas/Product'
  *       400:
  *        description: Business Rule Error
  *       401:

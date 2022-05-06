@@ -1,6 +1,5 @@
 import { ProductTypeStatus } from '@core/product-type-status/product-type-status.value-object';
 import { Entity, UniqueEntityID } from '@krater/building-blocks';
-import { ProductTypeProviderService } from './product-type-provider.service';
 
 interface ProductTypeProps {
   name: string;
@@ -13,16 +12,12 @@ export interface PersistedProductType {
   status: string;
 }
 
-interface Dependencies {
-  productTypeProviderService: ProductTypeProviderService;
-}
-
 export class ProductType extends Entity<ProductTypeProps> {
   private constructor(props: ProductTypeProps, id?: UniqueEntityID) {
     super(props, id);
   }
 
-  public static async createNew(name: string, { productTypeProviderService }: Dependencies) {
+  public static createNew(name: string) {
     return new ProductType({
       name,
       status: ProductTypeStatus.Active,

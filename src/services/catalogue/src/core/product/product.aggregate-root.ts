@@ -1,4 +1,3 @@
-import { ProductTypeProviderService } from '@core/product-type/product-type-provider.service';
 import { PersistedProductType, ProductType } from '@core/product-type/product-type.entity';
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
 
@@ -27,24 +26,15 @@ export interface CreateNewProductPayload {
   price: number;
 }
 
-interface Dependencies {
-  productTypeProviderService: ProductTypeProviderService;
-}
-
 export class Product extends AggregateRoot<ProductProps> {
   private constructor(props: ProductProps, id?: UniqueEntityID) {
     super(props, id);
   }
 
-  public static async createNew(
-    { type, ...payload }: CreateNewProductPayload,
-    { productTypeProviderService }: Dependencies,
-  ) {
+  public static createNew({ type, ...payload }: CreateNewProductPayload) {
     return new Product({
       ...payload,
-      type: await ProductType.createNew(type, {
-        productTypeProviderService,
-      }),
+      type: ProductType.createNew(type),
     });
   }
 

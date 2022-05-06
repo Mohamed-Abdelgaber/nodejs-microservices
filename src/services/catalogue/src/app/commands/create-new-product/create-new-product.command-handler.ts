@@ -1,4 +1,3 @@
-import { ProductTypeProviderService } from '@core/product-type/product-type-provider.service';
 import { Product } from '@core/product/product.aggregate-root';
 import { ProductRepository } from '@core/product/product.repository';
 import { CommandHandler } from '@krater/building-blocks';
@@ -6,7 +5,6 @@ import { CreateNewProductCommand } from './create-new-product.command';
 
 interface Dependencies {
   productRepository: ProductRepository;
-  productTypeProviderService: ProductTypeProviderService;
 }
 
 interface CreateNewProductCommandResult {
@@ -26,11 +24,9 @@ export class CreateNewProductCommandHandler
   public async handle({
     payload: { ...payload },
   }: CreateNewProductCommand): Promise<CreateNewProductCommandResult> {
-    const { productRepository, productTypeProviderService } = this.dependencies;
+    const { productRepository } = this.dependencies;
 
-    const product = await Product.createNew(payload, {
-      productTypeProviderService,
-    });
+    const product = Product.createNew(payload);
 
     await productRepository.insert(product);
 
