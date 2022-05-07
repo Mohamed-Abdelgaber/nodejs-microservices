@@ -20,6 +20,4 @@ export * from './event-subscriber';
 
 export * from './cron-job';
 
-export * from './paginated-query';
-
 export * from './service-command';

@@ -4,6 +4,7 @@ import { RequestHandler, Router } from 'express';
 interface Dependencies {
   createNewProductAction: RequestHandler[];
   addNewProductTypeAction: RequestHandler[];
+  getProductsAction: RequestHandler[];
 }
 
 export class CatalogueController implements Controller {
@@ -17,6 +18,8 @@ export class CatalogueController implements Controller {
     router.post('/products', this.dependencies.createNewProductAction);
 
     router.post('/product-types', this.dependencies.addNewProductTypeAction);
+
+    router.get('/products', this.dependencies.getProductsAction);
 
     return router;
   }

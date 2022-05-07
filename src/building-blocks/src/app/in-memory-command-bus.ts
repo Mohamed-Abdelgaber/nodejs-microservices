@@ -38,11 +38,16 @@ export class InMemoryCommandBus implements CommandBus {
       },
     );
 
+    span.addTags({
+      'x-type': 'command',
+    });
+
     const existingCommandHandler =
       this.existingCommandHandlers[this.getCommandHandlerName(command)];
 
     if (!existingCommandHandler) {
       span.finish();
+
       throw new KraterError(
         `Command Handler for command: "${this.getConstructorName(command)}" does not exist.`,
       );

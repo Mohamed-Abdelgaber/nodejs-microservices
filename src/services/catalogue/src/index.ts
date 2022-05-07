@@ -5,6 +5,7 @@ import { ProductRepositoryImpl } from '@infrastructure/product/product.repositor
 import { CatalogueServiceController } from '@api/catalogue.service-controller';
 import { CreateNewProductCommandHandler } from '@app/commands/create-new-product/create-new-product.command-handler';
 import { AddNewProductTypeCommandHandler } from '@app/commands/add-new-product-type/add-new-product-type.command-handler';
+import { GetProductsQueryHandler } from '@app/queries/get-products/get-products.query-handler';
 
 config();
 
@@ -17,7 +18,7 @@ config();
       asClass(CreateNewProductCommandHandler).singleton(),
       asClass(AddNewProductTypeCommandHandler).singleton(),
     ])
-    .setQueryHandlers([])
+    .setQueryHandlers([asClass(GetProductsQueryHandler).singleton()])
     .setControllers([])
     .loadActions([])
     .useConsul('http://localhost:8500')

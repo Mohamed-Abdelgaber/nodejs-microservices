@@ -14,7 +14,7 @@
  *          type: string
  *          format: uuid
  */
-export interface ProductDefinition {
+export interface ProductSchema {
   id: string;
   name: string;
   description: string;
