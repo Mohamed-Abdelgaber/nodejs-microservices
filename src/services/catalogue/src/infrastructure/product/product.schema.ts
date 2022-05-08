@@ -23,7 +23,7 @@ export const ProductSchema = new Schema(
     },
     type: {
       type: Types.ObjectId,
-      ref: 'product_type',
+      required: true,
     },
     status: {
       type: String,

@@ -3,11 +3,11 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import { RequestHandler } from 'express';
 
 interface Dependencies {
-  tracingMiddleware: RequestHandler;
   serviceClient: ServiceClient;
+  tracingMiddleware: RequestHandler;
 }
 
-const getSingleProductActionValidation = celebrate({
+const publishProductActionValidation = celebrate({
   [Segments.PARAMS]: {
     productId: Joi.string().uuid().required(),
   },
@@ -16,25 +16,17 @@ const getSingleProductActionValidation = celebrate({
 /**
  * @openapi
  *
- * /api/v1/catalogue/products/{productId}:
- *   get:
+ * /api/v1/catalogue/products/{productId}/publish:
+ *   patch:
  *     tags:
  *        - Catalogue
  *     summary:
- *       This endpoint allows to fetch single product.
+ *       This endpoint allows to publish single product.
  *     parameters:
  *       - $ref: '#components/parameters/productIdParam'
  *     responses:
- *       200:
- *        description: Single product fetched successfully.
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                data:
- *                  schema:
- *                    $ref: '#components/schemas/Product'
+ *       204:
+ *        description: Product published successfully.
  *       400:
  *        description: Business Rule Error
  *       401:
@@ -44,16 +36,16 @@ const getSingleProductActionValidation = celebrate({
  *       500:
  *         description: Internal Server Error
  */
-const getSingleProductAction = ({
+const publishProductAction = ({
   serviceClient,
   tracingMiddleware,
 }: Dependencies): RequestHandler[] => [
   tracingMiddleware,
-  getSingleProductActionValidation,
+  publishProductActionValidation,
   async (req, res, next) =>
     serviceClient
       .send(
-        'catalogue.get_single_product',
+        'catalogue.publish_product',
         {
           productId: req.params.productId,
         },
@@ -61,8 +53,8 @@ const getSingleProductAction = ({
           requestHeaders: req.headers,
         },
       )
-      .then((product) => res.status(200).json(product))
+      .then(() => res.sendStatus(204))
       .catch(next),
 ];
 
-export default getSingleProductAction;
+export default publishProductAction;

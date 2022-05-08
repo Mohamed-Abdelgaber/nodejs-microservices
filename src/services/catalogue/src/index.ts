@@ -7,6 +7,7 @@ import { CreateNewProductCommandHandler } from '@app/commands/create-new-product
 import { AddNewProductTypeCommandHandler } from '@app/commands/add-new-product-type/add-new-product-type.command-handler';
 import { GetProductsQueryHandler } from '@app/queries/get-products/get-products.query-handler';
 import { GetSingleProductQueryHandler } from '@app/queries/get-single-product/get-single-product.query-handler';
+import { PublishProductCommandHandler } from '@app/commands/publish-product/publish-product.command-handler';
 
 config();
 
@@ -18,6 +19,7 @@ config();
     .setCommandHandlers([
       asClass(CreateNewProductCommandHandler).singleton(),
       asClass(AddNewProductTypeCommandHandler).singleton(),
+      asClass(PublishProductCommandHandler).singleton(),
     ])
     .setQueryHandlers([
       asClass(GetProductsQueryHandler).singleton(),

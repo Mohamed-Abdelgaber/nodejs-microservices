@@ -5,4 +5,8 @@ export interface ProductRepository {
   insert(product: Product): Promise<void>;
 
   insertProductType(productType: ProductType): Promise<void>;
+
+  findById(id: string): Promise<Product | null>;
+
+  update(product: Product): Promise<void>;
 }

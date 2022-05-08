@@ -3,6 +3,10 @@ import {
   AddNewProductTypePayload,
 } from '@app/commands/add-new-product-type/add-new-product-type.command';
 import { CreateNewProductCommand } from '@app/commands/create-new-product/create-new-product.command';
+import {
+  PublishProductCommand,
+  PublishProductCommandPayload,
+} from '@app/commands/publish-product/publish-product.command';
 import { GetProductsQuery } from '@app/queries/get-products/get-products.query';
 import {
   GetSingleProductQuery,
@@ -35,6 +39,7 @@ export class CatalogueServiceController implements ServiceController {
       this.handleAddNewProductType(),
       this.handleGetProducts(),
       this.handleGetSingleProduct(),
+      this.handlePublishProduct(),
     ]);
   }
 
@@ -92,6 +97,21 @@ export class CatalogueServiceController implements ServiceController {
         const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
 
         return queryBus.handle(new GetSingleProductQuery(data), {
+          context,
+        });
+      },
+    );
+  }
+
+  private async handlePublishProduct() {
+    const { commandBus, serviceClient, tracer } = this.dependencies;
+
+    await serviceClient.subscribe<PublishProductCommandPayload>(
+      'catalogue.publish_product',
+      (data, { spanContext }) => {
+        const context = tracer.extract(FORMAT_HTTP_HEADERS, spanContext);
+
+        return commandBus.handle(new PublishProductCommand(data), {
           context,
         });
       },

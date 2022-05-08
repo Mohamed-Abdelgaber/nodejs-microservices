@@ -9,19 +9,17 @@ export class ProductRepositoryImpl implements ProductRepository {
   public async insert(product: Product): Promise<void> {
     const { type, ...productData } = product.toJSON();
 
-    await ProductModel.create(productData);
-
-    const existingProductType = await ProductTypeModel.find({
+    let existingProductType = await ProductTypeModel.findOne({
       name: type,
     });
 
-    if (existingProductType.length) {
-      return;
+    if (!existingProductType) {
+      const productTypeData = product.getType().toJSON();
+
+      existingProductType = await ProductTypeModel.create(productTypeData);
     }
 
-    const productTypeData = product.getType().toJSON();
-
-    await ProductTypeModel.create(productTypeData);
+    await ProductModel.create({ ...productData, type: existingProductType._id });
   }
 
   public async insertProductType(productType: ProductType): Promise<void> {
@@ -38,5 +36,35 @@ export class ProductRepositoryImpl implements ProductRepository {
     }
 
     await ProductTypeModel.create(data);
+  }
+
+  public async findById(id: string): Promise<Product> {
+    const product = await ProductModel.findOne({
+      id,
+    }).select(['id', 'name', 'description', 'type', 'status', 'weight', 'price']);
+
+    if (!product) {
+      return null;
+    }
+
+    const productType = await ProductTypeModel.findOne({
+      _id: product.type,
+    });
+
+    return Product.fromPersistence({
+      ...product.toJSON(),
+      type: productType.toJSON(),
+    });
+  }
+
+  public async update(product: Product): Promise<void> {
+    const { id, status } = product.toJSON();
+
+    await ProductModel.updateOne(
+      { id },
+      {
+        status,
+      },
+    );
   }
 }

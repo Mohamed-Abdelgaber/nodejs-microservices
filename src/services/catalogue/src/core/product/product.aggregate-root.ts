@@ -1,6 +1,8 @@
 import { ProductStatus } from '@core/product-status/product-status.value-object';
 import { PersistedProductType, ProductType } from '@core/product-type/product-type.entity';
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
+import { ProductMustBeInDraftStatusRule } from './rules/product-must-be-in-draft-status.rule';
+import { ProductMustNotBeAlreadyPublishedRule } from './rules/product-must-not-be-already-published.rule';
 
 interface ProductProps {
   name: string;
@@ -11,7 +13,7 @@ interface ProductProps {
   status: ProductStatus;
 }
 
-interface PersistedProduct {
+export interface PersistedProduct {
   id: string;
   name: string;
   description: string;
@@ -51,6 +53,13 @@ export class Product extends AggregateRoot<ProductProps> {
       },
       new UniqueEntityID(id),
     );
+  }
+
+  public publish() {
+    Product.checkRule(new ProductMustNotBeAlreadyPublishedRule(this.props.status));
+    Product.checkRule(new ProductMustBeInDraftStatusRule(this.props.status));
+
+    this.props.status = ProductStatus.Active;
   }
 
   public getType() {
