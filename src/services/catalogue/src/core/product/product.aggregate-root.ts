@@ -1,3 +1,4 @@
+import { ProductStatus } from '@core/product-status/product-status.value-object';
 import { PersistedProductType, ProductType } from '@core/product-type/product-type.entity';
 import { AggregateRoot, UniqueEntityID } from '@krater/building-blocks';
 
@@ -7,6 +8,7 @@ interface ProductProps {
   type: ProductType;
   weight: number;
   price: number;
+  status: ProductStatus;
 }
 
 interface PersistedProduct {
@@ -16,6 +18,7 @@ interface PersistedProduct {
   type: PersistedProductType;
   weight: number;
   price: number;
+  status: string;
 }
 
 export interface CreateNewProductPayload {
@@ -35,14 +38,16 @@ export class Product extends AggregateRoot<ProductProps> {
     return new Product({
       ...payload,
       type: ProductType.createNew(type),
+      status: ProductStatus.Draft,
     });
   }
 
-  public static fromPersistence({ id, type, ...data }: PersistedProduct) {
+  public static fromPersistence({ id, type, status, ...data }: PersistedProduct) {
     return new Product(
       {
         ...data,
         type: ProductType.fromPersistence(type),
+        status: ProductStatus.fromValue(status),
       },
       new UniqueEntityID(id),
     );
@@ -60,6 +65,7 @@ export class Product extends AggregateRoot<ProductProps> {
       type: this.props.type.getName(),
       weight: this.props.weight,
       price: this.props.price,
+      status: this.props.status.getValue(),
     };
   }
 }

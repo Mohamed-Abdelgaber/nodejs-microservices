@@ -1,3 +1,4 @@
+import { ProductStatusValue } from '@core/product-status/product-status.value-object';
 import { Schema, Types } from 'mongoose';
 import MongooseDelete from 'mongoose-delete';
 import MongooseIdValidator from 'mongoose-id-validator';
@@ -20,9 +21,14 @@ export const ProductSchema = new Schema(
       required: true,
       maxlength: 2000,
     },
-    status: {
+    type: {
       type: Types.ObjectId,
       ref: 'product_type',
+    },
+    status: {
+      type: String,
+      enum: ProductStatusValue,
+      default: ProductStatusValue.Draft,
     },
     weight: {
       type: Number,

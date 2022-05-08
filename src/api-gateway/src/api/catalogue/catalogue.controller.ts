@@ -5,6 +5,7 @@ interface Dependencies {
   createNewProductAction: RequestHandler[];
   addNewProductTypeAction: RequestHandler[];
   getProductsAction: RequestHandler[];
+  getSingleProductAction: RequestHandler[];
 }
 
 export class CatalogueController implements Controller {
@@ -20,6 +21,8 @@ export class CatalogueController implements Controller {
     router.post('/product-types', this.dependencies.addNewProductTypeAction);
 
     router.get('/products', this.dependencies.getProductsAction);
+
+    router.get('/products/:productId', this.dependencies.getSingleProductAction);
 
     return router;
   }

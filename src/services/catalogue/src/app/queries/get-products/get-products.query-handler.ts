@@ -1,15 +1,8 @@
+import { ProductStatusValue } from '@core/product-status/product-status.value-object';
 import { ProductModel } from '@infrastructure/product/product.model';
 import { QueryHandler, serializeDataToPaginatedResponse } from '@krater/building-blocks';
+import { Product } from '../product';
 import { GetProductsQuery } from './get-products.query';
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-  weight: number;
-  price: number;
-}
 
 interface GetProductsQueryResult {
   data: Product[];
@@ -21,9 +14,13 @@ export class GetProductsQueryHandler
   public async handle({
     payload: { itemsPerPage, page },
   }: GetProductsQuery): Promise<GetProductsQueryResult> {
-    const total = await ProductModel.count();
+    const total = await ProductModel.count({
+      status: ProductStatusValue.Active,
+    });
 
-    const products = await ProductModel.find()
+    const products = await ProductModel.find({
+      status: ProductStatusValue.Active,
+    })
       .skip((page - 1) * itemsPerPage)
       .limit(itemsPerPage);
 
