@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  api-gateway:
+    build:
+      dockerfile: ./src/api-gateway/docker/Dockerfile
+      context: ../
+    environment:
+      - APP_PORT=9500
+      - RABBIT_MQ_URL=amqp://rabbitmq
+      - CONSUL_URL=http://consul:8500
+    networks:
+      - krater
+
+networks:
+  krater:
